@@ -16,12 +16,15 @@ public class MenuPrincipal extends JFrame{
 
         JLabel lbUsuario = new JLabel("Usuario");
         lbUsuario.setFont(fontePrincipal);
+        lbUsuario.setForeground(Color.WHITE);
+
 
         tfUsuario = new JTextField();
         tfUsuario.setFont(fontePrincipal);
 
         JLabel lbSenha = new JLabel("Senha");
         lbSenha.setFont(fontePrincipal);
+        lbSenha.setForeground(Color.WHITE);
 
         pfSenha = new JPasswordField();
         pfSenha.setFont(fontePrincipal);
@@ -70,7 +73,7 @@ public class MenuPrincipal extends JFrame{
 
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
-        painelPrincipal.setBackground(new Color(128, 128, 255));
+        painelPrincipal.setBackground(new Color(25, 25, 112));
         painelPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         painelPrincipal.add(formPainel, BorderLayout.NORTH);
         painelPrincipal.add(lbError, BorderLayout.CENTER);
