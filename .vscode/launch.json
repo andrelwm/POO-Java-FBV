@@ -1,0 +1,42 @@
+{
+    // Use o IntelliSense para saber mais sobre os atributos possíveis.
+    // Focalizar para exibir as descrições dos atributos existentes.
+    // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Menu",
+            "request": "launch",
+            "mainClass": "Menu",
+            "projectName": "POO-Java-FBV-main_e59e613d"
+        },
+        {
+            "type": "java",
+            "name": "MenuPrincipal",
+            "request": "launch",
+            "mainClass": "MenuPrincipal",
+            "projectName": "POO-Java-FBV-main_e59e613d"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "ProjetoFBV_c9b1fa34"
+        },
+        {
+            "type": "java",
+            "name": "MenuPrincipal",
+            "request": "launch",
+            "mainClass": "MenuPrincipal",
+            "projectName": "ProjetoFBV_c9b1fa34"
+        }
+    ]
+}
