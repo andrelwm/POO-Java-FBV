@@ -8,36 +8,43 @@ public class MenuPrincipal extends JFrame{
     conexao con = new conexao();
     RepositorioUsuarios repositorio = new RepositorioUsuarios();
     final private Font fontePrincipal = new Font("Arial", Font.BOLD, 18);
-    private JTextField tfUsuario, pfSenha, pesquisaField;
+    final private Color corPrincipal = new Color(255, 255, 255);
+    JTextField tfUsuario, pfSenha;
+    private JTextField pesquisaField;
     private JList<String> amigosList, rankingList;
 
 
     private void Login(){
 
+        //Label e Text Field do usuário
         JLabel lbUsuario = new JLabel("Usuario");
         lbUsuario.setFont(fontePrincipal);
         lbUsuario.setForeground(Color.WHITE);
-
+        lbUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 
         tfUsuario = new JTextField();
         tfUsuario.setFont(fontePrincipal);
 
+        //Label e Password Field da senha
         JLabel lbSenha = new JLabel("Senha");
         lbSenha.setFont(fontePrincipal);
-        lbSenha.setForeground(Color.WHITE);
+        lbSenha.setForeground(corPrincipal);
+        lbSenha.setHorizontalAlignment(SwingConstants.CENTER);
 
         pfSenha = new JPasswordField();
         pfSenha.setFont(fontePrincipal);
 
+        //Mensagem de Erro para o caso de erro de senha ou usuário
         JLabel lbError = new JLabel();
         lbError.setFont(fontePrincipal);
+        lbError.setForeground(Color.WHITE);
 
         JButton btnEntrar = new JButton("Entrar");
         btnEntrar.setFont(fontePrincipal);
         btnEntrar.addActionListener(new ActionListener() {
 
             @Override
-            private void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                     
                 String nomeUsuario = tfUsuario.getText().toString();
                 String senha = pfSenha.getText().toString();
@@ -57,11 +64,24 @@ public class MenuPrincipal extends JFrame{
 
         });
 
+        JButton btnCadastrar = new JButton("Cadastrar");
+        btnCadastrar.setFont(fontePrincipal);
+        btnCadastrar.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MenuPrincipal menu = new MenuPrincipal();
+                menu.Cadastro();
+                setVisible(false);
+            }
+        });        
+
         JPanel painelBotao  = new JPanel();
-        //painelBotao.setLayout(new GridLayout(1, 2, 7, 7));
-        painelBotao.setPreferredSize(new Dimension(125, 40));
+        painelBotao.setLayout(new GridLayout(1, 2, 20, 7));
+        painelBotao.setPreferredSize(new Dimension(110, 35));
         painelBotao.setOpaque(false);
         painelBotao.add(btnEntrar);
+        painelBotao.add(btnCadastrar);
 
         JPanel formPainel = new JPanel();
         formPainel.setLayout(new GridLayout(4, 1, 5, 5));
@@ -81,12 +101,89 @@ public class MenuPrincipal extends JFrame{
 
         add(painelPrincipal);
 
-        setTitle("MySquad Teste");
+        setTitle("MySquad");
         setSize(350, 300);
         setMinimumSize(new Dimension(300, 300));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
         setLocationRelativeTo(null);
+
+    }
+
+    private void Cadastro() {
+
+        //Campos do cadastro
+        JLabel lbNovoUsuario = new JLabel("Usuário");
+        lbNovoUsuario.setFont(fontePrincipal);
+        lbNovoUsuario.setForeground(corPrincipal);
+        lbNovoUsuario.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JTextField tfNovoUsuario = new JTextField();
+        tfNovoUsuario.setFont(fontePrincipal);
+
+        JLabel lbNovaSenha = new JLabel("Senha");
+        lbNovaSenha.setFont(fontePrincipal);
+        lbNovaSenha.setForeground(corPrincipal);
+        lbNovaSenha.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JPasswordField pfNovaSenha = new JPasswordField();
+        pfNovaSenha.setFont(fontePrincipal);
+
+        JLabel lbEmail = new JLabel("E-mail");
+        lbEmail.setFont(fontePrincipal);
+        lbEmail.setForeground(corPrincipal);
+        lbEmail.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JTextField tfEmail = new JTextField();
+        tfEmail.setFont(fontePrincipal);
+
+        JButton btnConcluiCadastro = new JButton("Cadastrar");
+        btnConcluiCadastro.setFont(fontePrincipal);
+        btnConcluiCadastro.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                MenuPrincipal menu = new MenuPrincipal();
+                JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!", "MySquad - Cadastro", JOptionPane.INFORMATION_MESSAGE);
+                menu.Login();
+                setVisible(false);
+            }
+        });  
+
+        //Painel para os campos do cadastro
+        JPanel formPainel = new JPanel();
+        formPainel.setLayout(new GridLayout(6, 3, 10, 10));
+        formPainel.setOpaque(false);
+        formPainel.add(lbNovoUsuario);
+        formPainel.add(tfNovoUsuario);
+        formPainel.add(lbNovaSenha);
+        formPainel.add(pfNovaSenha);
+        formPainel.add(lbEmail);
+        formPainel.add(tfEmail);
+
+        //Painel do botão de conclusão do cadastro
+        JPanel painelBotao  = new JPanel();
+        //painelBotao.setLayout(new GridLayout(1, 2, 20, 7));
+        painelBotao.setPreferredSize(new Dimension(110, 35));
+        painelBotao.setOpaque(false);
+        painelBotao.add(btnConcluiCadastro);
+
+        //Painel Principal
+        JPanel painelPrincipal = new JPanel();
+        painelPrincipal.setLayout(new BorderLayout());
+        painelPrincipal.setBackground(new Color(25, 25, 112));
+        painelPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
+        painelPrincipal.add(formPainel, BorderLayout.NORTH);
+        painelPrincipal.add(painelBotao, BorderLayout.SOUTH);
+
+        setTitle("My Squad - Cadastro");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
+
+        add(painelPrincipal);
 
     }
 
@@ -102,6 +199,7 @@ public class MenuPrincipal extends JFrame{
 
         // Barra de navegação
         JPanel navigationBar = new JPanel();
+        navigationBar.setBackground(new Color(25, 25, 112));
         JButton homeButton = new JButton("Início");
         JButton gamesButton = new JButton("Jogos");
         JButton storeButton = new JButton("Loja");
