@@ -7,11 +7,11 @@ public class RepositorioUsuarios {
         
 
     private Map<String, String> usuarios;
-    public RepositorioUsuarios() {
+    private RepositorioUsuarios() {
         this.usuarios = new HashMap<>();
 
     }
-    public void cadastrarUsuario(String nomeUsuario, String senha) {
+    private void cadastrarUsuario(String nomeUsuario, String senha) {
         usuarios.put(nomeUsuario, senha);
 
         File arquivoRepo = new File("./src/usuarios.csv");
@@ -40,7 +40,7 @@ public class RepositorioUsuarios {
         System.out.println("Usuário cadastrado com sucesso!");
 
     } 
-    public boolean fazerLogin(String nomeUsuario, String senha) {
+    private boolean fazerLogin(String nomeUsuario, String senha) {
 
         try (BufferedReader br = new BufferedReader(new FileReader("./src/usuarios.csv"))) {
 

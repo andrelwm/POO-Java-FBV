@@ -8,12 +8,11 @@ public class MenuPrincipal extends JFrame{
     conexao con = new conexao();
     RepositorioUsuarios repositorio = new RepositorioUsuarios();
     final private Font fontePrincipal = new Font("Arial", Font.BOLD, 18);
-    JTextField tfUsuario, pfSenha;
-    private JTextField pesquisaField;
+    private JTextField tfUsuario, pfSenha, pesquisaField;
     private JList<String> amigosList, rankingList;
 
 
-    public void Login(){
+    private void Login(){
 
         JLabel lbUsuario = new JLabel("Usuario");
         lbUsuario.setFont(fontePrincipal);
@@ -38,7 +37,7 @@ public class MenuPrincipal extends JFrame{
         btnEntrar.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e) {
+            private void actionPerformed(ActionEvent e) {
                     
                 String nomeUsuario = tfUsuario.getText().toString();
                 String senha = pfSenha.getText().toString();
@@ -91,7 +90,7 @@ public class MenuPrincipal extends JFrame{
 
     }
 
-    public void Principal() {
+    private void Principal() {
         setTitle("My Squad");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

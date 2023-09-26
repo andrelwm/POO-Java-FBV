@@ -6,7 +6,7 @@ public class Menu {
         Menu.menuLogin();
     }
 
-    public static void menuLogin(){
+    private static void menuLogin(){
         
         RepositorioUsuarios repositorio = new RepositorioUsuarios();
         Scanner scanner = new Scanner(System.in);
@@ -56,7 +56,7 @@ public class Menu {
         scanner.close();
     }
 
-     public static void menuPrincipal(){
+     private static void menuPrincipal(){
 
         try (Scanner teclado = new Scanner(System.in)) {
             while (true) {

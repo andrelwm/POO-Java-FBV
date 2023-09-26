@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 
 public class conexao {
 
-    public Connection conectaDB() {
+    private Connection conectaDB() {
         Connection conBD = null;
 
         try {

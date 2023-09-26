@@ -8,7 +8,7 @@ public class Usuario {
     String  regiao;
     String  telefone;
 
-    public Usuario (String email, String senha, String nome, String regiao, String telefone) {
+    private Usuario (String email, String senha, String nome, String regiao, String telefone) {
 
         this.email = email;
         this.senha = senha;
