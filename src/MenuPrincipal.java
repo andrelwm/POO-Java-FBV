@@ -5,6 +5,7 @@ import javax.swing.*;
 
 public class MenuPrincipal extends JFrame{
 
+    conexao con = new conexao();
     RepositorioUsuarios repositorio = new RepositorioUsuarios();
     final private Font fontePrincipal = new Font("Arial", Font.BOLD, 18);
     JTextField tfUsuario, pfSenha;
