@@ -6,13 +6,14 @@ import javax.swing.JOptionPane;
 
 public class conexao {
 
-    private Connection conectaDB() {
+
+    public Connection conectaDB() {
         Connection conBD = null;
 
         try {
 
-            String url = "jdbc:mysql://localhost:3306/dbams?user=root&password=L453rm0p4d4@";
-            conBD = DriverManager.getConnection(url);
+            String url = "jdbc:mysql://localhost:3306/dbams?useTimezone=true&serverTimezone=UTC";
+            conBD = DriverManager.getConnection(url, "root", "L453rm0p4d4@");
 
         } catch (SQLException erro) {
 
@@ -24,3 +25,5 @@ public class conexao {
     }
     
 }
+
+//
