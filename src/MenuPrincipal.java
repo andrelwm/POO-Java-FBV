@@ -1,16 +1,16 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.*;
 
 public class MenuPrincipal extends JFrame{
 
-    conexao con = new conexao();
     RepositorioUsuarios repositorio = new RepositorioUsuarios();
     final private Font fontePrincipal = new Font("Arial", Font.BOLD, 18);
     final private Color corPrincipal = new Color(255, 255, 255);
-    JTextField tfUsuario, pfSenha;
-    private JTextField pesquisaField;
+    private JTextField tfUsuario, tfEmail, pfSenha, pesquisaField, tfNovoUsuario, pfNovaSenha;
     private JList<String> amigosList, rankingList;
 
 
@@ -45,20 +45,8 @@ public class MenuPrincipal extends JFrame{
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                    
-                String nomeUsuario = tfUsuario.getText().toString();
-                String senha = pfSenha.getText().toString();
-                boolean login = repositorio.fazerLogin(nomeUsuario, senha);
-
-                if (login == false) {
-                    lbError.setText("Usuário ou senha incorreta! Tente novamente!");
-                    tfUsuario.setText("");
-                    pfSenha.setText("");
-                } else {
-                    MenuPrincipal menu = new MenuPrincipal();
-                    menu.Principal();
-                    setVisible(false);
-                }
+                
+            Logar();               
                     
             }
 
@@ -82,6 +70,7 @@ public class MenuPrincipal extends JFrame{
         painelBotao.setOpaque(false);
         painelBotao.add(btnEntrar);
         painelBotao.add(btnCadastrar);
+        getRootPane().setDefaultButton(btnEntrar);
 
         JPanel formPainel = new JPanel();
         formPainel.setLayout(new GridLayout(4, 1, 5, 5));
@@ -118,7 +107,7 @@ public class MenuPrincipal extends JFrame{
         lbNovoUsuario.setForeground(corPrincipal);
         lbNovoUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JTextField tfNovoUsuario = new JTextField();
+        tfNovoUsuario = new JTextField();
         tfNovoUsuario.setFont(fontePrincipal);
 
         JLabel lbNovaSenha = new JLabel("Senha");
@@ -126,7 +115,7 @@ public class MenuPrincipal extends JFrame{
         lbNovaSenha.setForeground(corPrincipal);
         lbNovaSenha.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JPasswordField pfNovaSenha = new JPasswordField();
+        pfNovaSenha = new JPasswordField();
         pfNovaSenha.setFont(fontePrincipal);
 
         JLabel lbEmail = new JLabel("E-mail");
@@ -134,7 +123,7 @@ public class MenuPrincipal extends JFrame{
         lbEmail.setForeground(corPrincipal);
         lbEmail.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JTextField tfEmail = new JTextField();
+        tfEmail = new JTextField();
         tfEmail.setFont(fontePrincipal);
 
         JButton btnConcluiCadastro = new JButton("Cadastrar");
@@ -144,10 +133,13 @@ public class MenuPrincipal extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 
-                MenuPrincipal menu = new MenuPrincipal();
-                JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!", "MySquad - Cadastro", JOptionPane.INFORMATION_MESSAGE);
-                menu.Login();
-                setVisible(false);
+                if (Cadastrar()) {
+                    MenuPrincipal menu = new MenuPrincipal();
+                    JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!", "MySquad - Cadastro", JOptionPane.INFORMATION_MESSAGE);
+                    menu.Login();
+                    setVisible(false);
+                }
+                
             }
         });  
 
@@ -168,12 +160,13 @@ public class MenuPrincipal extends JFrame{
         painelBotao.setPreferredSize(new Dimension(110, 35));
         painelBotao.setOpaque(false);
         painelBotao.add(btnConcluiCadastro);
+        getRootPane().setDefaultButton(btnConcluiCadastro);
 
         //Painel Principal
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setBackground(new Color(25, 25, 112));
-        painelPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
+        painelPrincipal.setBorder(BorderFactory.createEmptyBorder(50, 100, 10, 100));
         painelPrincipal.add(formPainel, BorderLayout.NORTH);
         painelPrincipal.add(painelBotao, BorderLayout.SOUTH);
 
@@ -222,14 +215,17 @@ public class MenuPrincipal extends JFrame{
         // Ranking
         JPanel rankingPanel = new JPanel();
         rankingPanel.setLayout(new BorderLayout());
+        //rankingPanel.setBackground(new Color(135, 206, 235));
         JLabel rankingLabel = new JLabel("Ranking");
         rankingList = new JList<>(new String[]{"Jogador 1", "Jogador 2", "Jogador 3"});
         rankingPanel.add(rankingLabel, BorderLayout.NORTH);
         rankingPanel.add(new JScrollPane(rankingList), BorderLayout.CENTER);
+        //rankingList.setBackground(new Color(145, 210, 250));
         mainPanel.add(rankingPanel, BorderLayout.EAST);
 
         // Barra de pesquisa
         JPanel pesquisaPanel = new JPanel();
+        //pesquisaPanel.setBackground(new Color(135, 206, 235));
         pesquisaField = new JTextField(20);
         JButton pesquisaButton = new JButton("Pesquisar");
         pesquisaButton.addActionListener(new ActionListener() {
@@ -251,16 +247,103 @@ public class MenuPrincipal extends JFrame{
         JOptionPane.showMessageDialog(this, "Pesquisando por: " + termoPesquisa);
     }
 
+    private boolean Cadastrar() {
+
+        boolean sucesso = false;
+        
+        try {
+
+            String novoUsuario = tfNovoUsuario.getText().toString();
+            String novaSenha = pfNovaSenha.getText().toString();
+            String email = tfEmail.getText().toString();
+
+            Usuario objUsuarioVerifica = new Usuario();
+            objUsuarioVerifica.setNm_usuario(novoUsuario);
+            objUsuarioVerifica.setEmail(email);
+
+            testeconexao objVerifica = new testeconexao();
+            ResultSet rsUsuario = objVerifica.verificaUsuario(objUsuarioVerifica);
+            ResultSet rsEmail = objVerifica.verificaEmail(objUsuarioVerifica);
+
+            if(rsUsuario.next()) {
+
+                JOptionPane.showMessageDialog(null, "Nome de Usuário já existe", "MySquad - Cadastro", 0);
+
+            } else if (rsEmail.next()){
+
+                JOptionPane.showMessageDialog(null, "Já existe uma conta cadastrada com o email informado!", "MySquad - Cadastro", 0);
+
+            } else {
+
+                if ((tfNovoUsuario.getText().isEmpty()) | (pfNovaSenha.getText().isEmpty()) | (tfEmail.getText().isEmpty())){
+
+                    JOptionPane.showMessageDialog(null, "Preencha todos os campos, por favor!", "MySquad - Cadastro", 0);
+                    
+                } else {
+
+                    Usuario objUsuario = new Usuario();
+                    objUsuario.setNm_usuario(novoUsuario);
+                    objUsuario.setSenha(novaSenha);
+                    objUsuario.setEmail(email);
+
+                    testeconexao objconexao = new testeconexao();
+                    objconexao.fazerCadastro(objUsuario);
+                    sucesso = true;
+
+                }
+            }
+
+            
+        } catch (SQLException erro) {
+
+            JOptionPane.showMessageDialog(null, "MenuPrincipal.Logar: "+ erro, "ERRO!", 0);
+
+        }
+        return sucesso;
+        
+           
+
+    }
+
+    
+    private void Logar() {
+
+        try {
+
+                String nomeUsuario = tfUsuario.getText().toString();
+                String senha = pfSenha.getText().toString();
+
+                Usuario objUsuario = new Usuario();
+                objUsuario.setNm_usuario(nomeUsuario);
+                objUsuario.setSenha(senha);
+
+                testeconexao objconexao = new testeconexao();
+                ResultSet rsconexao = objconexao.fazerLogin(objUsuario);
+
+                if (rsconexao.next()) {
+
+                    MenuPrincipal menu = new MenuPrincipal();
+                    menu.Principal();
+                    setVisible(false);
+
+                } else {
+
+                    JOptionPane.showMessageDialog(null, "Usuário ou senha incorreta!", "My Squad - Login", 0);
+                    tfUsuario.setText("");
+                    pfSenha.setText("");
+
+                }
+
+            } catch (SQLException erro) {
+                JOptionPane.showMessageDialog(null, "MenuPrincipal.Logar: "+ erro, "ERRO!", 0);
+            }
+
+    }
+
+    
     public static void main(String[] args) {
         MenuPrincipal menuLogin = new MenuPrincipal();
         menuLogin.Login();
-    }
+        }
 
 }
-
-
-
-
-
-
-
