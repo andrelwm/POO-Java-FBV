@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-public class conexao {
+public class Conexao {
 
 
     public Connection conectaDB() {
@@ -12,8 +12,9 @@ public class conexao {
 
         try {
 
-            String url = "jdbc:mysql://localhost:3306/dbams?useTimezone=true&serverTimezone=UTC";
-            conBD = DriverManager.getConnection(url, "root", "L453rm0p4d4@");
+            //String url = "jdbc:mysql://localhost:3306/dbams?useTimezone=true&serverTimezone=UTC";
+            String url = "jdbc:postgresql://localhost:5432/dbams";
+            conBD = DriverManager.getConnection(url, "postgres", "L453rm0p4d4");
 
         } catch (SQLException erro) {
 
