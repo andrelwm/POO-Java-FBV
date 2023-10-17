@@ -3,15 +3,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class MenuPrincipal extends JFrame{
 
-    RepositorioUsuarios repositorio = new RepositorioUsuarios();
+    //Declaração de variáveis
     final private Font fontePrincipal = new Font("Arial", Font.BOLD, 18);
     final private Color corPrincipal = new Color(255, 255, 255);
     private JTextField tfUsuario, tfEmail, pfSenha, pesquisaField, tfNovoUsuario, pfNovaSenha;
     private JList<String> amigosList, rankingList;
+    private JTable tabelaUsuarios;
+    private DefaultTableModel model;
+    private String usuarioLogado;
 
 
     private void Login(){
@@ -34,12 +39,8 @@ public class MenuPrincipal extends JFrame{
         pfSenha = new JPasswordField();
         pfSenha.setFont(fontePrincipal);
 
-        //Mensagem de Erro para o caso de erro de senha ou usuário
-        JLabel lbError = new JLabel();
-        lbError.setFont(fontePrincipal);
-        lbError.setForeground(Color.WHITE);
-
         JButton btnEntrar = new JButton("Entrar");
+        //btnEntrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("./images/teste.png")));
         btnEntrar.setFont(fontePrincipal);
         btnEntrar.addActionListener(new ActionListener() {
 
@@ -83,9 +84,8 @@ public class MenuPrincipal extends JFrame{
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
         painelPrincipal.setBackground(new Color(25, 25, 112));
-        painelPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        painelPrincipal.setBorder(BorderFactory.createEmptyBorder(30, 10, 10, 10));
         painelPrincipal.add(formPainel, BorderLayout.NORTH);
-        painelPrincipal.add(lbError, BorderLayout.CENTER);
         painelPrincipal.add(painelBotao, BorderLayout.SOUTH);
 
         add(painelPrincipal);
@@ -190,17 +190,53 @@ public class MenuPrincipal extends JFrame{
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        // Barra de navegação
+        //Barra de Navegação
         JPanel navigationBar = new JPanel();
+        GridLayout navigationbarlayout = new GridLayout(1, 6);
+        navigationbarlayout.setHgap(20);
+        navigationBar.setLayout(navigationbarlayout);
+        navigationBar.setPreferredSize(new Dimension(800, 50));
+        navigationBar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         navigationBar.setBackground(new Color(25, 25, 112));
+
+        // Menu de navegação
+        JPanel navigationMenu = new JPanel();
+        GridLayout navigationlayout = new GridLayout(1, 4);
+        navigationlayout.setHgap(5);
+        navigationMenu.setLayout(navigationlayout);
+        navigationMenu.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+        navigationMenu.setBackground(new Color(25, 25, 112));
         JButton homeButton = new JButton("Início");
         JButton gamesButton = new JButton("Jogos");
-        JButton storeButton = new JButton("Loja");
-        JButton communityButton = new JButton("Comunidade");
-        navigationBar.add(homeButton);
-        navigationBar.add(gamesButton);
-        navigationBar.add(storeButton);
-        navigationBar.add(communityButton);
+        JButton profileButton = new JButton("Perfil");
+        JButton friendsButton = new JButton("Amigos");
+        navigationMenu.add(homeButton);
+        navigationMenu.add(profileButton);
+        navigationMenu.add(gamesButton);
+        navigationMenu.add(friendsButton);
+        navigationBar.add(navigationMenu, BorderLayout.WEST);
+
+        //Barra de Pesquisa
+        JPanel navigationPesquisa = new JPanel();
+        GridLayout pesquisalayout = new GridLayout(1, 3);
+        pesquisalayout.setHgap(5);
+        navigationPesquisa.setLayout(pesquisalayout);
+        navigationPesquisa.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 5));
+        navigationPesquisa.setBackground(new Color(25, 25, 112));
+        navigationBar.add(navigationPesquisa, BorderLayout.EAST);
+        pesquisaField = new JTextField(20);
+        JButton pesquisaButton = new JButton("Pesquisar");
+        pesquisaButton.setPreferredSize(new Dimension(50, 30));
+        pesquisaButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                realizarPesquisa();
+                
+            }
+        });
+        navigationPesquisa.add(pesquisaField);
+        navigationPesquisa.add(pesquisaButton);
+
         mainPanel.add(navigationBar, BorderLayout.NORTH);
 
         // Barra de amigos
@@ -215,38 +251,28 @@ public class MenuPrincipal extends JFrame{
         // Ranking
         JPanel rankingPanel = new JPanel();
         rankingPanel.setLayout(new BorderLayout());
-        //rankingPanel.setBackground(new Color(135, 206, 235));
         JLabel rankingLabel = new JLabel("Ranking");
         rankingList = new JList<>(new String[]{"Jogador 1", "Jogador 2", "Jogador 3"});
         rankingPanel.add(rankingLabel, BorderLayout.NORTH);
         rankingPanel.add(new JScrollPane(rankingList), BorderLayout.CENTER);
-        //rankingList.setBackground(new Color(145, 210, 250));
         mainPanel.add(rankingPanel, BorderLayout.EAST);
 
-        // Barra de pesquisa
-        JPanel pesquisaPanel = new JPanel();
-        //pesquisaPanel.setBackground(new Color(135, 206, 235));
-        pesquisaField = new JTextField(20);
-        JButton pesquisaButton = new JButton("Pesquisar");
-        pesquisaButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                realizarPesquisa();
-            }
-        });
-        pesquisaPanel.add(pesquisaField);
-        pesquisaPanel.add(pesquisaButton);
-        mainPanel.add(pesquisaPanel, BorderLayout.CENTER);
 
+        //Painel de resultados        
+        tabelaUsuarios = new JTable(model);
+        JScrollPane resultados = new JScrollPane(tabelaUsuarios);
+        resultados.setPreferredSize(new Dimension(100, 100));
+        mainPanel.add(resultados, BorderLayout.CENTER);
+        
         add(mainPanel);
         setVisible(true);
     }
 
-    private void realizarPesquisa() {
-        String termoPesquisa = pesquisaField.getText();
-        // Implemente a lógica de pesquisa aqui
-        JOptionPane.showMessageDialog(this, "Pesquisando por: " + termoPesquisa);
-    }
+    /*private void Perfil() {
 
+    }*/
+
+    //Métodos do Projeto
     private boolean Cadastrar() {
 
         boolean sucesso = false;
@@ -261,7 +287,7 @@ public class MenuPrincipal extends JFrame{
             objUsuarioVerifica.setNm_usuario(novoUsuario);
             objUsuarioVerifica.setEmail(email);
 
-            testeconexao objVerifica = new testeconexao();
+            UsuarioConexao objVerifica = new UsuarioConexao();
             ResultSet rsUsuario = objVerifica.verificaUsuario(objUsuarioVerifica);
             ResultSet rsEmail = objVerifica.verificaEmail(objUsuarioVerifica);
 
@@ -286,7 +312,7 @@ public class MenuPrincipal extends JFrame{
                     objUsuario.setSenha(novaSenha);
                     objUsuario.setEmail(email);
 
-                    testeconexao objconexao = new testeconexao();
+                    UsuarioConexao objconexao = new UsuarioConexao();
                     objconexao.fazerCadastro(objUsuario);
                     sucesso = true;
 
@@ -305,6 +331,41 @@ public class MenuPrincipal extends JFrame{
 
     }
 
+    private void realizarPesquisa() {
+
+        try {
+
+            String termoPesquisa = ('%' + pesquisaField.getText() + '%').toString();
+
+            Usuario objUsuarioPesquisa = new Usuario();
+            objUsuarioPesquisa.setNm_usuario(termoPesquisa);
+
+            UsuarioConexao objPesquisa = new UsuarioConexao();
+
+            model = new DefaultTableModel();
+            model.setNumRows(0);
+
+            ArrayList<Usuario> lista = objPesquisa.pesquisaUsuario(objUsuarioPesquisa);
+
+            //System.out.println();
+
+            for(int num = 0; num < lista.size(); num++){
+
+                model.addRow(new Object[]{
+                    lista.get(num).getNm_usuario(),
+                    lista.get(num).getNome()
+                });  
+                
+            }
+
+        } catch (Exception erro) {
+
+            JOptionPane.showMessageDialog(null, "MenuPrincipal.realizarPesquisa: "+ erro, "ERRO!", 0);
+            
+        }
+        
+    }
+
     
     private void Logar() {
 
@@ -317,11 +378,12 @@ public class MenuPrincipal extends JFrame{
                 objUsuario.setNm_usuario(nomeUsuario);
                 objUsuario.setSenha(senha);
 
-                testeconexao objconexao = new testeconexao();
+                UsuarioConexao objconexao = new UsuarioConexao();
                 ResultSet rsconexao = objconexao.fazerLogin(objUsuario);
 
                 if (rsconexao.next()) {
 
+                    usuarioLogado = nomeUsuario;
                     MenuPrincipal menu = new MenuPrincipal();
                     menu.Principal();
                     setVisible(false);
