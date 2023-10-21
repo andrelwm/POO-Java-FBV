@@ -11,15 +11,14 @@ public class MySquad extends JFrame{
 
     //Declaração de variáveis
     final private Font fontePrincipal = new Font("Arial", Font.BOLD, 18);
-    final private Color corPrincipal = new Color(255, 255, 255);
-    private JTextField tfUsuario, tfEmail, pfSenha, pesquisaField, tfNovoUsuario, pfNovaSenha;
+    final private Color textoPrincipal = new Color(255, 255, 255);
+    final private Color fundoPrincipal = new Color(25, 25, 112);
+    private JTextField tfUsuario, tfEmail, pfSenha, pesquisaField, tfNovoUsuario, pfNovaSenha, nickField, regiaoField;
     private JList<String> amigosList, rankingList;
     private JTable tabelaUsuarios;
     private DefaultTableModel model;
     private String usuarioLogado;
-    private JTextField nickField;
     private JComboBox<String> jogosFavoritosComboBox;
-    private JTextField paisField;
 
 
     private void Login(){
@@ -36,7 +35,7 @@ public class MySquad extends JFrame{
         //Label e Password Field da senha
         JLabel lbSenha = new JLabel("Senha");
         lbSenha.setFont(fontePrincipal);
-        lbSenha.setForeground(corPrincipal);
+        lbSenha.setForeground(textoPrincipal);
         lbSenha.setHorizontalAlignment(SwingConstants.CENTER);
 
         pfSenha = new JPasswordField();
@@ -86,7 +85,7 @@ public class MySquad extends JFrame{
 
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
-        painelPrincipal.setBackground(new Color(25, 25, 112));
+        painelPrincipal.setBackground(fundoPrincipal);
         painelPrincipal.setBorder(BorderFactory.createEmptyBorder(30, 10, 10, 10));
         painelPrincipal.add(formPainel, BorderLayout.NORTH);
         painelPrincipal.add(painelBotao, BorderLayout.SOUTH);
@@ -107,15 +106,14 @@ public class MySquad extends JFrame{
         //Campos do cadastro
         JLabel lbNovoUsuario = new JLabel("Usuário");
         lbNovoUsuario.setFont(fontePrincipal);
-        lbNovoUsuario.setForeground(corPrincipal);
+        lbNovoUsuario.setForeground(textoPrincipal);
         lbNovoUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-
         tfNovoUsuario = new JTextField();
         tfNovoUsuario.setFont(fontePrincipal);
 
         JLabel lbNovaSenha = new JLabel("Senha");
         lbNovaSenha.setFont(fontePrincipal);
-        lbNovaSenha.setForeground(corPrincipal);
+        lbNovaSenha.setForeground(textoPrincipal);
         lbNovaSenha.setHorizontalAlignment(SwingConstants.CENTER);
 
         pfNovaSenha = new JPasswordField();
@@ -123,7 +121,7 @@ public class MySquad extends JFrame{
 
         JLabel lbEmail = new JLabel("E-mail");
         lbEmail.setFont(fontePrincipal);
-        lbEmail.setForeground(corPrincipal);
+        lbEmail.setForeground(textoPrincipal);
         lbEmail.setHorizontalAlignment(SwingConstants.CENTER);
 
         tfEmail = new JTextField();
@@ -168,7 +166,7 @@ public class MySquad extends JFrame{
         //Painel Principal
         JPanel painelPrincipal = new JPanel();
         painelPrincipal.setLayout(new BorderLayout());
-        painelPrincipal.setBackground(new Color(25, 25, 112));
+        painelPrincipal.setBackground(fundoPrincipal);
         painelPrincipal.setBorder(BorderFactory.createEmptyBorder(50, 100, 10, 100));
         painelPrincipal.add(formPainel, BorderLayout.NORTH);
         painelPrincipal.add(painelBotao, BorderLayout.SOUTH);
@@ -200,7 +198,7 @@ public class MySquad extends JFrame{
         navigationBar.setLayout(navigationbarlayout);
         navigationBar.setPreferredSize(new Dimension(800, 50));
         navigationBar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        navigationBar.setBackground(new Color(25, 25, 112));
+        navigationBar.setBackground(fundoPrincipal);
 
         // Menu de navegação
         JPanel navigationMenu = new JPanel();
@@ -208,7 +206,7 @@ public class MySquad extends JFrame{
         navigationlayout.setHgap(5);
         navigationMenu.setLayout(navigationlayout);
         navigationMenu.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
-        navigationMenu.setBackground(new Color(25, 25, 112));
+        navigationMenu.setBackground(fundoPrincipal);
         JButton homeButton = new JButton("Início");
         JButton gamesButton = new JButton("Jogos");
         JButton profileButton = new JButton("Perfil");
@@ -216,7 +214,7 @@ public class MySquad extends JFrame{
             public void actionPerformed(ActionEvent e) {
 
                     MySquad menu = new MySquad();
-                    menu.PerfilGamerEditor();
+                    menu.Profile();
                     setVisible(false);
 
             }
@@ -234,7 +232,7 @@ public class MySquad extends JFrame{
         pesquisalayout.setHgap(5);
         navigationPesquisa.setLayout(pesquisalayout);
         navigationPesquisa.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 5));
-        navigationPesquisa.setBackground(new Color(25, 25, 112));
+        navigationPesquisa.setBackground(fundoPrincipal);
         navigationBar.add(navigationPesquisa, BorderLayout.EAST);
         pesquisaField = new JTextField(20);
         JButton pesquisaButton = new JButton("Pesquisar");
@@ -279,42 +277,144 @@ public class MySquad extends JFrame{
         add(mainPanel);
         setVisible(true);
     }
+
+    //tela de perfil 
+   public void Profile() {
+
+        // Painel principal 
+        JPanel profilePanel = new JPanel();
+        profilePanel.setSize(400, 400);
+        profilePanel.setLayout(null);
+        profilePanel.setBackground(Color.BLACK);
+        profilePanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 5));
+
+        /*// fundo verde passando no fundo chupa mundo
+        JPanel backgroundEffect = new JPanel();
+        backgroundEffect.setBounds(0, 0, 400, 400);
+        backgroundEffect.setBackground(new Color(0, 128, 0, 128));
+        profilePanel.add(backgroundEffect);*/
+
+        // Campos do perfill
+        JLabel nameLabel = new JLabel("Nome:");
+        nameLabel.setForeground(Color.GREEN);
+        nameLabel.setBounds(20, 20, 80, 20);
+
+        JTextField nameField = new JTextField(20);
+        nameField.setBounds(120, 20, 200, 20);
+
+        JLabel regionLabel = new JLabel("Região:");
+        regionLabel.setForeground(Color.GREEN);
+        regionLabel.setBounds(20, 60, 80, 20);
+
+        JTextField regionField = new JTextField(20);
+        regionField.setBounds(120, 60, 200, 20);
+
+        JLabel gameLabel = new JLabel("Jogo Favorito:");
+        gameLabel.setForeground(Color.GREEN);
+        gameLabel.setBounds(20, 100, 100, 20);
+
+        JTextField gameField = new JTextField(20);
+        gameField.setBounds(140, 100, 200, 20);
+
+        JLabel phoneLabel = new JLabel("Telefone:");
+        phoneLabel.setForeground(Color.GREEN);
+        phoneLabel.setBounds(20, 140, 80, 20);
+
+        JTextField phoneField = new JTextField(20);
+        phoneField.setBounds(120, 140, 200, 20);
+
+        JLabel emailLabel = new JLabel("Email:");
+        emailLabel.setForeground(Color.GREEN);
+        emailLabel.setBounds(20, 180, 60, 20);
+
+        JTextField emailField = new JTextField(20);
+        emailField.setBounds(100, 180, 220, 20);
+
+        // Botão de Salvar ta meio ruim
+        JButton saveButton = new JButton("Salvar");
+        saveButton.setBounds(150, 220, 100, 30);
+        saveButton.setBackground(Color.GREEN);
+        saveButton.setForeground(Color.BLACK);
+        saveButton.setFocusPainted(false);
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Lógica para salvar os dados do perfil aqui andre
+            }
+        });
+
+        profilePanel.add(nameLabel);
+        profilePanel.add(nameField);
+        profilePanel.add(regionLabel);
+        profilePanel.add(regionField);
+        profilePanel.add(gameLabel);
+        profilePanel.add(gameField);
+        profilePanel.add(phoneLabel);
+        profilePanel.add(phoneField);
+        profilePanel.add(emailLabel);
+        profilePanel.add(emailField);
+        profilePanel.add(saveButton);
+
+        add(profilePanel);
+        setVisible(true);
+    }
     
     //PAINEL DE EDIÇÃO DE PERFIL//
-    public void PerfilGamerEditor() {
-        // Configurações iniciais da janela
-        setTitle("Editar Perfil Gamer");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+    public void ProfileEditor() {
 
-        // Crie um painel para organizar os componentes
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 2));
+        // Configurações iniciais da janela
+        setTitle("My Squad - Editar Perfil");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(700, 450);
+
+        // Painel para organizar o formulário e botoões
+        JPanel profilePanel = new JPanel();
+        profilePanel.setLayout(new BorderLayout());
+        profilePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        profilePanel.setBackground(fundoPrincipal);
+
+        //Painel para organizar os componentes
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new GridLayout(14, 3));
+        formPanel.setBackground(fundoPrincipal);
+        profilePanel.add(formPanel, BorderLayout.NORTH);
 
         // Componente para adicionar foto (neste exemplo, apenas um rótulo)
         JLabel fotoLabel = new JLabel("Foto: ");
+        fotoLabel.setFont(fontePrincipal);
+        fotoLabel.setForeground(textoPrincipal);
         JButton adicionarFotoButton = new JButton("Selecionar Foto");
-        panel.add(fotoLabel);
-        panel.add(adicionarFotoButton);
+        fotoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(fotoLabel);
+        formPanel.add(adicionarFotoButton);
 
         // Campo para editar o nickname
         JLabel nickLabel = new JLabel("Nickname: ");
+        nickLabel.setFont(fontePrincipal);
+        nickLabel.setForeground(textoPrincipal);
         nickField = new JTextField(20);
-        panel.add(nickLabel);
-        panel.add(nickField);
+        nickLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(nickLabel);
+        formPanel.add(nickField);
 
         // Campo para editar o país
-        JLabel paisLabel = new JLabel("País: ");
-        paisField = new JTextField(20);
-        panel.add(paisLabel);
-        panel.add(paisField);
+        JLabel regiaoLabel = new JLabel("Região: ");
+        regiaoLabel.setFont(fontePrincipal);
+        regiaoLabel.setForeground(textoPrincipal);
+        regiaoField = new JTextField(20);
+        regiaoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(regiaoLabel);
+        formPanel.add(regiaoField);
 
         // Campo para selecionar jogos favoritos
         JLabel jogosLabel = new JLabel("Jogos Favoritos: ");
+        jogosLabel.setFont(fontePrincipal);
+        jogosLabel.setForeground(textoPrincipal);
         String[] jogos = {"Jogo 1", "Jogo 2", "Jogo 3", "Outro Jogo"};
         jogosFavoritosComboBox = new JComboBox<>(jogos);
-        panel.add(jogosLabel);
-        panel.add(jogosFavoritosComboBox);
+        jogosLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(jogosLabel);
+        formPanel.add(jogosFavoritosComboBox);
 
         // Botão de salvar
         JButton salvarButton = new JButton("Salvar");
@@ -322,7 +422,7 @@ public class MySquad extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 // Lógica para salvar as informações do perfil
                 String nickname = nickField.getText();
-                String pais = paisField.getText();
+                String pais = regiaoField.getText();
                 String jogoSelecionado = (String) jogosFavoritosComboBox.getSelectedItem();
 
                 // Implemente a lógica de salvamento aqui
@@ -334,11 +434,22 @@ public class MySquad extends JFrame{
                 System.out.println("Jogo Favorito: " + jogoSelecionado);
             }
         });
-        panel.add(new JLabel()); // Rótulo vazio para preencher espaço
-        panel.add(salvarButton);
+
+        //Painel para o botão de salvar
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setPreferredSize(new Dimension(100, 35));
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(salvarButton);
+        getRootPane().setDefaultButton(salvarButton);
+        profilePanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        
 
         // Adicione o painel à janela
-        add(panel);
+        add(profilePanel);
+
+        //Centraliza o painel principal
+        setLocationRelativeTo(null);
 
         // Exiba a janela
         setVisible(true);
