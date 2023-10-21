@@ -209,6 +209,16 @@ public class MenuPrincipal extends JFrame{
         JButton homeButton = new JButton("Início");
         JButton gamesButton = new JButton("Jogos");
         JButton profileButton = new JButton("Perfil");
+        profileButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                    MenuPrincipal edicao = new MenuPrincipal();
+                    edicao.PerfilGameEditor();
+                    setVisible(false);
+
+
+            }
+        });
         JButton friendsButton = new JButton("Amigos");
         navigationMenu.add(homeButton);
         navigationMenu.add(profileButton);
@@ -328,7 +338,77 @@ public class MenuPrincipal extends JFrame{
         return sucesso;
         
            
-
+//PAINEL DE EDIÇÃO DE PERFIL//
+    }
+    public class PerfilGamerEditor extends JFrame {
+        private JTextField nickField;
+        private JComboBox<String> jogosFavoritosComboBox;
+        private JTextField paisField;
+    
+        public PerfilGamerEditor() {
+            // Configurações iniciais da janela
+            setTitle("Editar Perfil Gamer");
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setSize(400, 300);
+    
+            // Crie um painel para organizar os componentes
+            JPanel panel = new JPanel();
+            panel.setLayout(new GridLayout(5, 2));
+    
+            // Componente para adicionar foto (neste exemplo, apenas um rótulo)
+            JLabel fotoLabel = new JLabel("Foto: ");
+            JButton adicionarFotoButton = new JButton("Selecionar Foto");
+            panel.add(fotoLabel);
+            panel.add(adicionarFotoButton);
+    
+            // Campo para editar o nickname
+            JLabel nickLabel = new JLabel("Nickname: ");
+            nickField = new JTextField(20);
+            panel.add(nickLabel);
+            panel.add(nickField);
+    
+            // Campo para editar o país
+            JLabel paisLabel = new JLabel("País: ");
+            paisField = new JTextField(20);
+            panel.add(paisLabel);
+            panel.add(paisField);
+    
+            // Campo para selecionar jogos favoritos
+            JLabel jogosLabel = new JLabel("Jogos Favoritos: ");
+            String[] jogos = {"Jogo 1", "Jogo 2", "Jogo 3", "Outro Jogo"};
+            jogosFavoritosComboBox = new JComboBox<>(jogos);
+            panel.add(jogosLabel);
+            panel.add(jogosFavoritosComboBox);
+    
+            // Botão de salvar
+            JButton salvarButton = new JButton("Salvar");
+            salvarButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    // Lógica para salvar as informações do perfil
+                    String nickname = nickField.getText();
+                    String pais = paisField.getText();
+                    String jogoSelecionado = (String) jogosFavoritosComboBox.getSelectedItem();
+    
+                    // Implemente a lógica de salvamento aqui
+                    // salvar o banco de dados aqui andre 
+    
+                    // Exemplo: exibindo os dados no console
+                    System.out.println("Nickname: " + nickname);
+                    System.out.println("País: " + pais);
+                    System.out.println("Jogo Favorito: " + jogoSelecionado);
+                }
+            });
+            panel.add(new JLabel()); // Rótulo vazio para preencher espaço
+            panel.add(salvarButton);
+    
+            // Adicione o painel à janela
+            add(panel);
+    
+            // Exiba a janela
+            setVisible(true);
+        }
+    
+       
     }
 
     private void realizarPesquisa() {
@@ -409,3 +489,4 @@ public class MenuPrincipal extends JFrame{
         }
 
 }
+
