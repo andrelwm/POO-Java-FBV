@@ -3,6 +3,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 public class UsuarioConexao {
@@ -11,6 +12,7 @@ public class UsuarioConexao {
     PreparedStatement pstm;
     ResultSet rs;
     ArrayList<Usuario> lista = new ArrayList<>();
+    ArrayList<Jogos> gameList = new ArrayList<>();
 
     public ResultSet fazerLogin(Usuario objUsuario){
 
@@ -137,5 +139,37 @@ public class UsuarioConexao {
         return lista;
 
     }
+
+    public ResultSet mostraJogos() {
+
+        conexao = new Conexao().conectaDB();
+
+        try {
+
+            String query = "select nm_jogo from jogos";
+            
+            pstm = conexao.prepareStatement(query); 
+
+            return pstm.executeQuery();
+            
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "UsuarioConexao.mostraJogos: " + erro, "Erro!", 0);
+            return null;
+        }
+    }
+
+    /*public void editaPerfil(Usuario objUsuario){
+
+        conexao = new Conexao().conectaDB();
+
+        try {
+
+            String query = "insert into jogo_usuario values (?, ?)"
+            
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+    }*/
 
 }
