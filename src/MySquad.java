@@ -18,10 +18,10 @@ public class MySquad extends JFrame{
     private JTextField tfUsuario, tfEmail, pfSenha, pesquisaField, tfNovoUsuario, pfNovaSenha, nickField, regiaoField;
     private JList<String> amigosList, rankingList;
     private JComboBox<String> cbjogos;
+    private JComboBox<String> cbregiao;
     private JTable tabelaUsuarios;
     private DefaultTableModel model;
     private String usuarioLogado;
-    private JComboBox<String> jogosFavoritosComboBox;
 
 
     private void Login(){
@@ -556,10 +556,12 @@ public class MySquad extends JFrame{
         JLabel regiaoLabel = new JLabel("Região: ");
         regiaoLabel.setFont(fontePrincipal);
         //regiaoLabel.setForeground(textoPrincipal);
-        regiaoField = new JTextField(20);
+        cbregiao = new JComboBox<String>();
+        cbregiao.addItem("Selecione uma região");
+        cbregiao = mostrarRegiao();
         regiaoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         formPanel.add(regiaoLabel);
-        formPanel.add(regiaoField);
+        formPanel.add(cbregiao);
 
         // Campo para selecionar jogos favoritos
         JLabel jogosLabel = new JLabel("Jogos Favoritos: ");
@@ -578,15 +580,15 @@ public class MySquad extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 // Lógica para salvar as informações do perfil
                 String nickname = nickField.getText();
-                String pais = regiaoField.getText();
-                String jogoSelecionado = (String) jogosFavoritosComboBox.getSelectedItem();
+                String regiao = regiaoField.getText();
+                String jogoSelecionado = (String) cbjogos.getSelectedItem();
 
                 // Implemente a lógica de salvamento aqui
                 // salvar o banco de dados aqui andre 
 
                 // Exemplo: exibindo os dados no console
                 System.out.println("Nickname: " + nickname);
-                System.out.println("País: " + pais);
+                System.out.println("Região: " + regiao);
                 System.out.println("Jogo Favorito: " + jogoSelecionado);
             }
         });
@@ -756,10 +758,34 @@ public class MySquad extends JFrame{
 
 
         } catch (SQLException erro) {
-            JOptionPane.showMessageDialog(null, "MySquad.mostraJogos: " + erro, "ERRO!", 0);
+            JOptionPane.showMessageDialog(null, "MySquad.mostrarJogos: " + erro, "ERRO!", 0);
         }
 
         return cbjogos;
+
+    }
+
+    private JComboBox<String> mostrarRegiao(){
+
+        try {
+
+            UsuarioConexao objConexao = new UsuarioConexao();
+            
+            ResultSet rs = objConexao.mostraRegiao();
+
+            while(rs.next()) {
+
+                //lista.add(rs.getString(1));
+                cbregiao.addItem(rs.getString(1));
+
+            }
+
+
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "MySquad.mostrarRegiao: " + erro, "ERRO!", 0);
+        }
+
+        return cbregiao;
 
     }
 
