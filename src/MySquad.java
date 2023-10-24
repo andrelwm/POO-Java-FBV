@@ -296,6 +296,84 @@ public class MySquad extends JFrame{
             setTitle("My Squad - Amigos");
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setSize(800, 600);
+
+            //Barra de Navegação
+            JPanel navigationBar = new JPanel();
+            GridLayout navigationbarlayout = new GridLayout(1, 6);
+            navigationbarlayout.setHgap(20);
+            navigationBar.setLayout(navigationbarlayout);
+            navigationBar.setPreferredSize(new Dimension(800, 50));
+            navigationBar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            navigationBar.setBackground(fundoPrincipal);
+
+            // Menu de navegação
+            JPanel navigationMenu = new JPanel();
+            GridLayout navigationlayout = new GridLayout(1, 4);
+            navigationlayout.setHgap(5);
+            navigationMenu.setLayout(navigationlayout);
+            navigationMenu.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+            navigationMenu.setBackground(fundoPrincipal);
+            JButton homeButton = new JButton("Início");
+            homeButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                        MySquad menu = new MySquad();
+                        menu.Principal();
+                        setVisible(false);
+
+                }
+            });
+
+            JButton gamesButton = new JButton("Jogos");
+
+            JButton profileButton = new JButton("Perfil");
+            profileButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                        MySquad menu = new MySquad();
+                        menu.ProfileEditor();
+                        setVisible(false);
+
+                }
+            });
+
+            JButton friendsButton = new JButton("Amigos");
+            friendsButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                        MySquad menu = new MySquad();
+                        menu.friendsPanel();
+                        setVisible(false);
+
+                }
+            });
+
+            navigationMenu.add(homeButton);
+            navigationMenu.add(profileButton);
+            navigationMenu.add(gamesButton);
+            navigationMenu.add(friendsButton);
+            navigationBar.add(navigationMenu, BorderLayout.WEST);
+
+            //Barra de Pesquisa
+            JPanel navigationPesquisa = new JPanel();
+            GridLayout pesquisalayout = new GridLayout(1, 3);
+            pesquisalayout.setHgap(5);
+            navigationPesquisa.setLayout(pesquisalayout);
+            navigationPesquisa.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 5));
+            navigationPesquisa.setBackground(fundoPrincipal);
+            navigationBar.add(navigationPesquisa, BorderLayout.EAST);
+            pesquisaField = new JTextField(20);
+            JButton pesquisaButton = new JButton("Pesquisar");
+            pesquisaButton.setPreferredSize(new Dimension(50, 30));
+            pesquisaButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                    realizarPesquisa();
+                    
+                }
+            });
+            navigationPesquisa.add(pesquisaField);
+            navigationPesquisa.add(pesquisaButton);
     
             JPanel onlinePanel = new JPanel();
             onlinePanel.setBorder(BorderFactory.createTitledBorder("Amigos Online"));
@@ -326,6 +404,7 @@ public class MySquad extends JFrame{
             });
     
             setLayout(new BorderLayout());
+            add(navigationBar, BorderLayout.NORTH);
             add(onlinePanel, BorderLayout.WEST);
             add(offlinePanel, BorderLayout.CENTER);
             add(gamesPanel, BorderLayout.EAST);
@@ -345,24 +424,103 @@ public class MySquad extends JFrame{
         // Configurações iniciais da janela
         setTitle("My Squad - Editar Perfil");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(700, 450);
+        setSize(800, 600);
+
+        //Barra de Navegação
+        JPanel navigationBar = new JPanel();
+        GridLayout navigationbarlayout = new GridLayout(1, 6);
+        navigationbarlayout.setHgap(20);
+        navigationBar.setLayout(navigationbarlayout);
+        navigationBar.setPreferredSize(new Dimension(800, 50));
+        navigationBar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        navigationBar.setBackground(fundoPrincipal);
+
+        // Menu de navegação
+        JPanel navigationMenu = new JPanel();
+        GridLayout navigationlayout = new GridLayout(1, 4);
+        navigationlayout.setHgap(5);
+        navigationMenu.setLayout(navigationlayout);
+        navigationMenu.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+        navigationMenu.setBackground(fundoPrincipal);
+        JButton homeButton = new JButton("Início");
+        homeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                    MySquad menu = new MySquad();
+                    menu.Principal();
+                    setVisible(false);
+
+            }
+        });
+
+        JButton gamesButton = new JButton("Jogos");
+
+        JButton profileButton = new JButton("Perfil");
+        profileButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                    MySquad menu = new MySquad();
+                    menu.ProfileEditor();
+                    setVisible(false);
+
+            }
+        });
+
+        JButton friendsButton = new JButton("Amigos");
+        friendsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                    MySquad menu = new MySquad();
+                    menu.friendsPanel();
+                    setVisible(false);
+
+            }
+        });
+
+        navigationMenu.add(homeButton);
+        navigationMenu.add(profileButton);
+        navigationMenu.add(gamesButton);
+        navigationMenu.add(friendsButton);
+        navigationBar.add(navigationMenu, BorderLayout.WEST);
+
+        //Barra de Pesquisa
+        JPanel navigationPesquisa = new JPanel();
+        GridLayout pesquisalayout = new GridLayout(1, 3);
+        pesquisalayout.setHgap(5);
+        navigationPesquisa.setLayout(pesquisalayout);
+        navigationPesquisa.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 5));
+        navigationPesquisa.setBackground(fundoPrincipal);
+        navigationBar.add(navigationPesquisa, BorderLayout.EAST);
+        pesquisaField = new JTextField(20);
+        JButton pesquisaButton = new JButton("Pesquisar");
+        pesquisaButton.setPreferredSize(new Dimension(50, 30));
+        pesquisaButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                realizarPesquisa();
+                
+            }
+        });
+        navigationPesquisa.add(pesquisaField);
+        navigationPesquisa.add(pesquisaButton);
 
         // Painel para organizar o formulário e botoões
         JPanel profilePanel = new JPanel();
         profilePanel.setLayout(new BorderLayout());
-        profilePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        profilePanel.setBackground(fundoPrincipal);
+        profilePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        //profilePanel.setBackground(fundoPrincipal);
 
         //Painel para organizar os componentes
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(14, 3));
-        formPanel.setBackground(fundoPrincipal);
-        profilePanel.add(formPanel, BorderLayout.NORTH);
+        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        //formPanel.setBackground(fundoPrincipal);
+        profilePanel.add(formPanel, BorderLayout.CENTER);
 
         // Componente para adicionar foto (neste exemplo, apenas um rótulo)
         JLabel fotoLabel = new JLabel("Foto: ");
         fotoLabel.setFont(fontePrincipal);
-        fotoLabel.setForeground(textoPrincipal);
+        //fotoLabel.setForeground(textoPrincipal);
         JButton adicionarFotoButton = new JButton("Selecionar Foto");
         adicionarFotoButton.addActionListener(new ActionListener() {
             @Override
@@ -388,7 +546,7 @@ public class MySquad extends JFrame{
         // Campo para editar o nickname
         JLabel nickLabel = new JLabel("Nickname: ");
         nickLabel.setFont(fontePrincipal);
-        nickLabel.setForeground(textoPrincipal);
+        //nickLabel.setForeground(textoPrincipal);
         nickField = new JTextField(20);
         nickLabel.setHorizontalAlignment(SwingConstants.CENTER);
         formPanel.add(nickLabel);
@@ -397,7 +555,7 @@ public class MySquad extends JFrame{
         // Campo para editar o país
         JLabel regiaoLabel = new JLabel("Região: ");
         regiaoLabel.setFont(fontePrincipal);
-        regiaoLabel.setForeground(textoPrincipal);
+        //regiaoLabel.setForeground(textoPrincipal);
         regiaoField = new JTextField(20);
         regiaoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         formPanel.add(regiaoLabel);
@@ -406,7 +564,7 @@ public class MySquad extends JFrame{
         // Campo para selecionar jogos favoritos
         JLabel jogosLabel = new JLabel("Jogos Favoritos: ");
         jogosLabel.setFont(fontePrincipal);
-        jogosLabel.setForeground(textoPrincipal);
+        //jogosLabel.setForeground(textoPrincipal);
         cbjogos = new JComboBox<String>();
         cbjogos.addItem("Selecione um jogo");
         cbjogos = mostrarJogos();
@@ -440,6 +598,7 @@ public class MySquad extends JFrame{
         buttonPanel.add(salvarButton);
         getRootPane().setDefaultButton(salvarButton);
         profilePanel.add(buttonPanel, BorderLayout.SOUTH);
+        profilePanel.add(navigationBar, BorderLayout.NORTH);
 
         
 
