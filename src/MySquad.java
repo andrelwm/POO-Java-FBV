@@ -4,7 +4,9 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 public class MySquad extends JFrame{
@@ -15,6 +17,7 @@ public class MySquad extends JFrame{
     final private Color fundoPrincipal = new Color(25, 25, 112);
     private JTextField tfUsuario, tfEmail, pfSenha, pesquisaField, tfNovoUsuario, pfNovaSenha, nickField, regiaoField;
     private JList<String> amigosList, rankingList;
+    private JComboBox<String> cbjogos;
     private JTable tabelaUsuarios;
     private DefaultTableModel model;
     private String usuarioLogado;
@@ -214,12 +217,21 @@ public class MySquad extends JFrame{
             public void actionPerformed(ActionEvent e) {
 
                     MySquad menu = new MySquad();
-                    menu.Profile();
+                    menu.ProfileEditor();
                     setVisible(false);
 
             }
         });
         JButton friendsButton = new JButton("Amigos");
+        friendsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                    MySquad menu = new MySquad();
+                    menu.friendsPanel();
+                    setVisible(false);
+
+            }
+        });
         navigationMenu.add(homeButton);
         navigationMenu.add(profileButton);
         navigationMenu.add(gamesButton);
@@ -278,85 +290,53 @@ public class MySquad extends JFrame{
         setVisible(true);
     }
 
-    //tela de perfil 
-   public void Profile() {
 
-        // Painel principal 
-        JPanel profilePanel = new JPanel();
-        profilePanel.setSize(400, 400);
-        profilePanel.setLayout(null);
-        profilePanel.setBackground(Color.BLACK);
-        profilePanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 5));
+    public void friendsPanel() {
 
-        /*// fundo verde passando no fundo chupa mundo
-        JPanel backgroundEffect = new JPanel();
-        backgroundEffect.setBounds(0, 0, 400, 400);
-        backgroundEffect.setBackground(new Color(0, 128, 0, 128));
-        profilePanel.add(backgroundEffect);*/
-
-        // Campos do perfill
-        JLabel nameLabel = new JLabel("Nome:");
-        nameLabel.setForeground(Color.GREEN);
-        nameLabel.setBounds(20, 20, 80, 20);
-
-        JTextField nameField = new JTextField(20);
-        nameField.setBounds(120, 20, 200, 20);
-
-        JLabel regionLabel = new JLabel("Região:");
-        regionLabel.setForeground(Color.GREEN);
-        regionLabel.setBounds(20, 60, 80, 20);
-
-        JTextField regionField = new JTextField(20);
-        regionField.setBounds(120, 60, 200, 20);
-
-        JLabel gameLabel = new JLabel("Jogo Favorito:");
-        gameLabel.setForeground(Color.GREEN);
-        gameLabel.setBounds(20, 100, 100, 20);
-
-        JTextField gameField = new JTextField(20);
-        gameField.setBounds(140, 100, 200, 20);
-
-        JLabel phoneLabel = new JLabel("Telefone:");
-        phoneLabel.setForeground(Color.GREEN);
-        phoneLabel.setBounds(20, 140, 80, 20);
-
-        JTextField phoneField = new JTextField(20);
-        phoneField.setBounds(120, 140, 200, 20);
-
-        JLabel emailLabel = new JLabel("Email:");
-        emailLabel.setForeground(Color.GREEN);
-        emailLabel.setBounds(20, 180, 60, 20);
-
-        JTextField emailField = new JTextField(20);
-        emailField.setBounds(100, 180, 220, 20);
-
-        // Botão de Salvar ta meio ruim
-        JButton saveButton = new JButton("Salvar");
-        saveButton.setBounds(150, 220, 100, 30);
-        saveButton.setBackground(Color.GREEN);
-        saveButton.setForeground(Color.BLACK);
-        saveButton.setFocusPainted(false);
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Lógica para salvar os dados do perfil aqui andre
-            }
-        });
-
-        profilePanel.add(nameLabel);
-        profilePanel.add(nameField);
-        profilePanel.add(regionLabel);
-        profilePanel.add(regionField);
-        profilePanel.add(gameLabel);
-        profilePanel.add(gameField);
-        profilePanel.add(phoneLabel);
-        profilePanel.add(phoneField);
-        profilePanel.add(emailLabel);
-        profilePanel.add(emailField);
-        profilePanel.add(saveButton);
-
-        add(profilePanel);
-        setVisible(true);
+            setTitle("My Squad - Amigos");
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setSize(800, 600);
+    
+            JPanel onlinePanel = new JPanel();
+            onlinePanel.setBorder(BorderFactory.createTitledBorder("Amigos Online"));
+            onlinePanel.setLayout(new BoxLayout(onlinePanel, BoxLayout.Y_AXIS));
+    
+            JPanel offlinePanel = new JPanel();
+            offlinePanel.setBorder(BorderFactory.createTitledBorder("Amigos Offline"));
+            offlinePanel.setLayout(new BoxLayout(offlinePanel, BoxLayout.Y_AXIS));
+    
+            JPanel gamesPanel = new JPanel();
+            gamesPanel.setBorder(BorderFactory.createTitledBorder("Jogos em Andamento"));
+            gamesPanel.setLayout(new BoxLayout(gamesPanel, BoxLayout.Y_AXIS));
+    
+            JButton addFriendButton = new JButton("Adicionar Amigo");
+            addFriendButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Lógica para adicionar amigos
+                }
+            });
+    
+            JButton sendInviteButton = new JButton("Enviar Convite");
+            sendInviteButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Lógica para enviar convites
+                }
+            });
+    
+            setLayout(new BorderLayout());
+            add(onlinePanel, BorderLayout.WEST);
+            add(offlinePanel, BorderLayout.CENTER);
+            add(gamesPanel, BorderLayout.EAST);
+    
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.add(addFriendButton);
+            buttonPanel.add(sendInviteButton);
+            add(buttonPanel, BorderLayout.SOUTH);
+    
+            setVisible(true);
+            setLocationRelativeTo(null);
     }
     
     //PAINEL DE EDIÇÃO DE PERFIL//
@@ -384,6 +364,23 @@ public class MySquad extends JFrame{
         fotoLabel.setFont(fontePrincipal);
         fotoLabel.setForeground(textoPrincipal);
         JButton adicionarFotoButton = new JButton("Selecionar Foto");
+        adicionarFotoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "JPG & GIF Images", "jpg", "gif");
+                chooser.setFileFilter(filter);
+                int returnVal = chooser.showOpenDialog(null);
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                System.out.println("You chose to open this file: " +
+                chooser.getSelectedFile().getName());
+        }
+
+            }
+        });
+
         fotoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         formPanel.add(fotoLabel);
         formPanel.add(adicionarFotoButton);
@@ -410,11 +407,12 @@ public class MySquad extends JFrame{
         JLabel jogosLabel = new JLabel("Jogos Favoritos: ");
         jogosLabel.setFont(fontePrincipal);
         jogosLabel.setForeground(textoPrincipal);
-        String[] jogos = {"Jogo 1", "Jogo 2", "Jogo 3", "Outro Jogo"};
-        jogosFavoritosComboBox = new JComboBox<>(jogos);
+        cbjogos = new JComboBox<String>();
+        cbjogos.addItem("Selecione um jogo");
+        cbjogos = mostrarJogos();
         jogosLabel.setHorizontalAlignment(SwingConstants.CENTER);
         formPanel.add(jogosLabel);
-        formPanel.add(jogosFavoritosComboBox);
+        formPanel.add(cbjogos);
 
         // Botão de salvar
         JButton salvarButton = new JButton("Salvar");
@@ -579,6 +577,30 @@ public class MySquad extends JFrame{
             } catch (SQLException erro) {
                 JOptionPane.showMessageDialog(null, "MySquad.Logar: "+ erro, "ERRO!", 0);
             }
+
+    }
+
+    private JComboBox<String> mostrarJogos(){
+
+        try {
+
+            UsuarioConexao objConexao = new UsuarioConexao();
+            
+            ResultSet rs = objConexao.mostraJogos();
+
+            while(rs.next()) {
+
+                //lista.add(rs.getString(1));
+                cbjogos.addItem(rs.getString(1));
+
+            }
+
+
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "MySquad.mostraJogos: " + erro, "ERRO!", 0);
+        }
+
+        return cbjogos;
 
     }
 
