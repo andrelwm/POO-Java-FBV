@@ -12,7 +12,6 @@ public class UsuarioConexao {
     PreparedStatement pstm;
     ResultSet rs;
     ArrayList<Usuario> lista = new ArrayList<>();
-    ArrayList<Jogos> gameList = new ArrayList<>();
 
     public ResultSet fazerLogin(Usuario objUsuario){
 
@@ -158,18 +157,48 @@ public class UsuarioConexao {
         }
     }
 
-    /*public void editaPerfil(Usuario objUsuario){
+    public ResultSet mostraRegiao() {
 
         conexao = new Conexao().conectaDB();
 
         try {
 
-            String query = "insert into jogo_usuario values (?, ?)"
+            String query = "select ds_regiao from regiao";
             
-        } catch (Exception e) {
-            // TODO: handle exception
+            pstm = conexao.prepareStatement(query); 
+
+            return pstm.executeQuery();
+            
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "UsuarioConexao.mostraRegiao: " + erro, "Erro!", 0);
+            return null;
+        }
+    }
+
+    public ResultSet editaPerfil(Usuario objUsuario, Jogos objJogos){
+
+        conexao = new Conexao().conectaDB();
+
+        try {
+
+            String query = "insert into jogo_usuario values (?, ?);"
+            + "insert into usuario(nm_usuario, ds_regiao) values (?, ?)";
+
+            pstm = conexao.prepareStatement(query); 
+
+            pstm.setInt(1, objUsuario.getCod_usuario());
+            pstm.setInt(2, objJogos.getCd_jogo());
+            pstm.setString(3, objUsuario.getNm_usuario());
+            pstm.setString(4, objUsuario.getRegiao());
+
+            rs = pstm.executeQuery();
+            return rs;
+            
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "UsuarioConexao.editaPerfil: " + erro, "Erro!", 0);
+            return null;
         }
 
-    }*/
+    }
 
 }
