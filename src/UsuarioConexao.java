@@ -3,6 +3,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 public class UsuarioConexao {
@@ -34,8 +35,34 @@ public class UsuarioConexao {
         }
         
 
+    }
 
+    public int usuarioLogado(Usuario objUsuario) {
 
+        conexao = new Conexao().conectaDB();
+
+        try {
+
+            String query = "select cd_usuario from usuario where nm_usuario = ?";
+
+            pstm = conexao.prepareStatement(query);
+            pstm.setString(1, objUsuario.getNm_usuario());
+
+            rs = pstm.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                return 0;
+            }
+            
+
+        } catch (SQLException erro) {
+
+            JOptionPane.showMessageDialog(null, "UsuarioConexao.usuarioLogado: " + erro, "Erro!", 0);
+            return 0;
+        }
+        
     }
 
     public void fazerCadastro(Usuario objUsuario){
@@ -135,6 +162,92 @@ public class UsuarioConexao {
         }
 
         return lista;
+
+    }
+
+    public ResultSet mostraJogos() {
+
+        conexao = new Conexao().conectaDB();
+
+        try {
+
+            String query = "select nm_jogo from jogos";
+            
+            pstm = conexao.prepareStatement(query); 
+
+            return pstm.executeQuery();
+            
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "UsuarioConexao.mostraJogos: " + erro, "Erro!", 0);
+            return null;
+        }
+    }
+
+    public ResultSet mostraRegiao() {
+
+        conexao = new Conexao().conectaDB();
+
+        try {
+
+            String query = "select ds_regiao from regiao";
+            
+            pstm = conexao.prepareStatement(query); 
+
+            return pstm.executeQuery();
+            
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "UsuarioConexao.mostraRegiao: " + erro, "Erro!", 0);
+            return null;
+        }
+    }
+
+    public void editaPerfilUsuario(Usuario objUsuario, int usuarioLogado){
+
+        conexao = new Conexao().conectaDB();
+
+        try {
+
+            String query = "update usuario set ds_nome = ?, ds_regiao = ? where cd_usuario = ?;"
+            + "commit;";
+
+            pstm = conexao.prepareStatement(query); 
+
+            pstm.setString(1, objUsuario.getNm_usuario());
+            pstm.setString(2, objUsuario.getRegiao());
+            pstm.setInt(3, usuarioLogado);
+
+            pstm.execute();
+            pstm.close();
+            
+        } catch (SQLException erro) {
+
+            JOptionPane.showMessageDialog(null, "UsuarioConexao.editaPerfilUsuario: " + erro, "Erro!", 0);
+        
+        }
+
+    }
+
+    public void insereJogo(int usuarioLogado, Jogos objJogos){
+
+        conexao = new Conexao().conectaDB();
+
+        try {
+
+            String query = "insert into jogo_usuario(cd_usuario, cd_jogo) values(?, (select cd_jogo from jogos where nm_jogo = ?));";
+
+            pstm = conexao.prepareStatement(query); 
+
+            pstm.setInt(1, usuarioLogado);
+            pstm.setString(2, objJogos.getNm_jogo());
+
+            pstm.execute();
+            pstm.close();
+            
+        } catch (SQLException erro) {
+
+            JOptionPane.showMessageDialog(null, "UsuarioConexao.insereJogo: " + erro, "Erro!", 0);
+        
+        }
 
     }
 
