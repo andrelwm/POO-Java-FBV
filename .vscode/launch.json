@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MySquad",
+            "request": "launch",
+            "mainClass": "MySquad",
+            "projectName": "POO-Java-FBV-main_afc238c2"
+        },
+        {
+            "type": "java",
             "name": "Menu",
             "request": "launch",
             "mainClass": "Menu",

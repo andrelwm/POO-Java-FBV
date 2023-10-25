@@ -15,13 +15,13 @@ public class MySquad extends JFrame{
     final private Font fontePrincipal = new Font("Arial", Font.BOLD, 18);
     final private Color textoPrincipal = new Color(255, 255, 255);
     final private Color fundoPrincipal = new Color(25, 25, 112);
-    private JTextField tfUsuario, tfEmail, pfSenha, pesquisaField, tfNovoUsuario, pfNovaSenha, nomeField;
+    private JTextField tfUsuario, tfEmail, pfSenha, pesquisaField, tfNovoUsuario, pfNovaSenha, nickField, regiaoField;
     private JList<String> amigosList, rankingList;
     private JComboBox<String> cbjogos;
-    private JComboBox<String> cbregiao;
     private JTable tabelaUsuarios;
     private DefaultTableModel model;
-    private static int usuarioLogado;
+    private String usuarioLogado;
+    private JComboBox<String> jogosFavoritosComboBox;
 
 
     private void Login(){
@@ -296,84 +296,6 @@ public class MySquad extends JFrame{
             setTitle("My Squad - Amigos");
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setSize(800, 600);
-
-            //Barra de Navegação
-            JPanel navigationBar = new JPanel();
-            GridLayout navigationbarlayout = new GridLayout(1, 6);
-            navigationbarlayout.setHgap(20);
-            navigationBar.setLayout(navigationbarlayout);
-            navigationBar.setPreferredSize(new Dimension(800, 50));
-            navigationBar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-            navigationBar.setBackground(fundoPrincipal);
-
-            // Menu de navegação
-            JPanel navigationMenu = new JPanel();
-            GridLayout navigationlayout = new GridLayout(1, 4);
-            navigationlayout.setHgap(5);
-            navigationMenu.setLayout(navigationlayout);
-            navigationMenu.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
-            navigationMenu.setBackground(fundoPrincipal);
-            JButton homeButton = new JButton("Início");
-            homeButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-
-                        MySquad menu = new MySquad();
-                        menu.Principal();
-                        setVisible(false);
-
-                }
-            });
-
-            JButton gamesButton = new JButton("Jogos");
-
-            JButton profileButton = new JButton("Perfil");
-            profileButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-
-                        MySquad menu = new MySquad();
-                        menu.ProfileEditor();
-                        setVisible(false);
-
-                }
-            });
-
-            JButton friendsButton = new JButton("Amigos");
-            friendsButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-
-                        MySquad menu = new MySquad();
-                        menu.friendsPanel();
-                        setVisible(false);
-
-                }
-            });
-
-            navigationMenu.add(homeButton);
-            navigationMenu.add(profileButton);
-            navigationMenu.add(gamesButton);
-            navigationMenu.add(friendsButton);
-            navigationBar.add(navigationMenu, BorderLayout.WEST);
-
-            //Barra de Pesquisa
-            JPanel navigationPesquisa = new JPanel();
-            GridLayout pesquisalayout = new GridLayout(1, 3);
-            pesquisalayout.setHgap(5);
-            navigationPesquisa.setLayout(pesquisalayout);
-            navigationPesquisa.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 5));
-            navigationPesquisa.setBackground(fundoPrincipal);
-            navigationBar.add(navigationPesquisa, BorderLayout.EAST);
-            pesquisaField = new JTextField(20);
-            JButton pesquisaButton = new JButton("Pesquisar");
-            pesquisaButton.setPreferredSize(new Dimension(50, 30));
-            pesquisaButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-
-                    realizarPesquisa();
-                    
-                }
-            });
-            navigationPesquisa.add(pesquisaField);
-            navigationPesquisa.add(pesquisaButton);
     
             JPanel onlinePanel = new JPanel();
             onlinePanel.setBorder(BorderFactory.createTitledBorder("Amigos Online"));
@@ -404,7 +326,6 @@ public class MySquad extends JFrame{
             });
     
             setLayout(new BorderLayout());
-            add(navigationBar, BorderLayout.NORTH);
             add(onlinePanel, BorderLayout.WEST);
             add(offlinePanel, BorderLayout.CENTER);
             add(gamesPanel, BorderLayout.EAST);
@@ -424,103 +345,24 @@ public class MySquad extends JFrame{
         // Configurações iniciais da janela
         setTitle("My Squad - Editar Perfil");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
-
-        //Barra de Navegação
-        JPanel navigationBar = new JPanel();
-        GridLayout navigationbarlayout = new GridLayout(1, 6);
-        navigationbarlayout.setHgap(20);
-        navigationBar.setLayout(navigationbarlayout);
-        navigationBar.setPreferredSize(new Dimension(800, 50));
-        navigationBar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        navigationBar.setBackground(fundoPrincipal);
-
-        // Menu de navegação
-        JPanel navigationMenu = new JPanel();
-        GridLayout navigationlayout = new GridLayout(1, 4);
-        navigationlayout.setHgap(5);
-        navigationMenu.setLayout(navigationlayout);
-        navigationMenu.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
-        navigationMenu.setBackground(fundoPrincipal);
-        JButton homeButton = new JButton("Início");
-        homeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                    MySquad menu = new MySquad();
-                    menu.Principal();
-                    setVisible(false);
-
-            }
-        });
-
-        JButton gamesButton = new JButton("Jogos");
-
-        JButton profileButton = new JButton("Perfil");
-        profileButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                    MySquad menu = new MySquad();
-                    menu.ProfileEditor();
-                    setVisible(false);
-
-            }
-        });
-
-        JButton friendsButton = new JButton("Amigos");
-        friendsButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                    MySquad menu = new MySquad();
-                    menu.friendsPanel();
-                    setVisible(false);
-
-            }
-        });
-
-        navigationMenu.add(homeButton);
-        navigationMenu.add(profileButton);
-        navigationMenu.add(gamesButton);
-        navigationMenu.add(friendsButton);
-        navigationBar.add(navigationMenu, BorderLayout.WEST);
-
-        //Barra de Pesquisa
-        JPanel navigationPesquisa = new JPanel();
-        GridLayout pesquisalayout = new GridLayout(1, 3);
-        pesquisalayout.setHgap(5);
-        navigationPesquisa.setLayout(pesquisalayout);
-        navigationPesquisa.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 5));
-        navigationPesquisa.setBackground(fundoPrincipal);
-        navigationBar.add(navigationPesquisa, BorderLayout.EAST);
-        pesquisaField = new JTextField(20);
-        JButton pesquisaButton = new JButton("Pesquisar");
-        pesquisaButton.setPreferredSize(new Dimension(50, 30));
-        pesquisaButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                realizarPesquisa();
-                
-            }
-        });
-        navigationPesquisa.add(pesquisaField);
-        navigationPesquisa.add(pesquisaButton);
+        setSize(700, 450);
 
         // Painel para organizar o formulário e botoões
         JPanel profilePanel = new JPanel();
         profilePanel.setLayout(new BorderLayout());
-        profilePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-        //profilePanel.setBackground(fundoPrincipal);
+        profilePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        profilePanel.setBackground(fundoPrincipal);
 
         //Painel para organizar os componentes
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(14, 3));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        //formPanel.setBackground(fundoPrincipal);
-        profilePanel.add(formPanel, BorderLayout.CENTER);
+        formPanel.setBackground(fundoPrincipal);
+        profilePanel.add(formPanel, BorderLayout.NORTH);
 
         // Componente para adicionar foto (neste exemplo, apenas um rótulo)
         JLabel fotoLabel = new JLabel("Foto: ");
         fotoLabel.setFont(fontePrincipal);
-        //fotoLabel.setForeground(textoPrincipal);
+        fotoLabel.setForeground(textoPrincipal);
         JButton adicionarFotoButton = new JButton("Selecionar Foto");
         adicionarFotoButton.addActionListener(new ActionListener() {
             @Override
@@ -544,29 +386,27 @@ public class MySquad extends JFrame{
         formPanel.add(adicionarFotoButton);
 
         // Campo para editar o nickname
-        JLabel nomeLabel = new JLabel("Nome: ");
-        nomeLabel.setFont(fontePrincipal);
-        //nickLabel.setForeground(textoPrincipal);
-        nomeField = new JTextField(20);
-        nomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        formPanel.add(nomeLabel);
-        formPanel.add(nomeField);
+        JLabel nickLabel = new JLabel("Nickname: ");
+        nickLabel.setFont(fontePrincipal);
+        nickLabel.setForeground(textoPrincipal);
+        nickField = new JTextField(20);
+        nickLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(nickLabel);
+        formPanel.add(nickField);
 
         // Campo para editar o país
         JLabel regiaoLabel = new JLabel("Região: ");
         regiaoLabel.setFont(fontePrincipal);
-        //regiaoLabel.setForeground(textoPrincipal);
-        cbregiao = new JComboBox<String>();
-        cbregiao.addItem("Selecione uma região");
-        cbregiao = mostrarRegiao();
+        regiaoLabel.setForeground(textoPrincipal);
+        regiaoField = new JTextField(20);
         regiaoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         formPanel.add(regiaoLabel);
-        formPanel.add(cbregiao);
+        formPanel.add(regiaoField);
 
         // Campo para selecionar jogos favoritos
         JLabel jogosLabel = new JLabel("Jogos Favoritos: ");
         jogosLabel.setFont(fontePrincipal);
-        //jogosLabel.setForeground(textoPrincipal);
+        jogosLabel.setForeground(textoPrincipal);
         cbjogos = new JComboBox<String>();
         cbjogos.addItem("Selecione um jogo");
         cbjogos = mostrarJogos();
@@ -578,14 +418,18 @@ public class MySquad extends JFrame{
         JButton salvarButton = new JButton("Salvar");
         salvarButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
-                try {
-                    editarPerfil();
-                    System.out.println("Editado com sucesso!");
-                } catch (SQLException erro) {
-                JOptionPane.showMessageDialog(null, "MySquad.profileEditor.salvarButton: " + erro, "ERRO!", 0);
-                }
-                
+                // Lógica para salvar as informações do perfil
+                String nickname = nickField.getText();
+                String pais = regiaoField.getText();
+                String jogoSelecionado = (String) jogosFavoritosComboBox.getSelectedItem();
+
+                // Implemente a lógica de salvamento aqui
+                // salvar o banco de dados aqui andre 
+
+                // Exemplo: exibindo os dados no console
+                System.out.println("Nickname: " + nickname);
+                System.out.println("País: " + pais);
+                System.out.println("Jogo Favorito: " + jogoSelecionado);
             }
         });
 
@@ -596,7 +440,6 @@ public class MySquad extends JFrame{
         buttonPanel.add(salvarButton);
         getRootPane().setDefaultButton(salvarButton);
         profilePanel.add(buttonPanel, BorderLayout.SOUTH);
-        profilePanel.add(navigationBar, BorderLayout.NORTH);
 
         
 
@@ -608,41 +451,6 @@ public class MySquad extends JFrame{
 
         // Exiba a janela
         setVisible(true);
-    }
-
-    private void Logar() {
-
-        try {
-
-                String nomeUsuario = tfUsuario.getText().toString();
-                String senha = pfSenha.getText().toString();
-
-                Usuario objUsuario = new Usuario();
-                objUsuario.setNm_usuario(nomeUsuario);
-                objUsuario.setSenha(senha);
-
-                UsuarioConexao objconexao = new UsuarioConexao();
-                ResultSet rsconexao = objconexao.fazerLogin(objUsuario);
-
-                if (rsconexao.next()) {
-
-                    usuarioLogado = objconexao.usuarioLogado(objUsuario);
-                    MySquad menu = new MySquad();
-                    menu.Principal();
-                    setVisible(false);
-
-                } else {
-
-                    JOptionPane.showMessageDialog(null, "Usuário ou senha incorreta!", "My Squad - Login", 0);
-                    tfUsuario.setText("");
-                    pfSenha.setText("");
-
-                }
-
-        } catch (SQLException erro) {
-            JOptionPane.showMessageDialog(null, "MySquad.Logar: "+ erro, "ERRO!", 0);
-        }
-
     }
 
     private boolean Cadastrar() {
@@ -736,6 +544,42 @@ public class MySquad extends JFrame{
         
     }
 
+    
+    private void Logar() {
+
+        try {
+
+                String nomeUsuario = tfUsuario.getText().toString();
+                String senha = pfSenha.getText().toString();
+
+                Usuario objUsuario = new Usuario();
+                objUsuario.setNm_usuario(nomeUsuario);
+                objUsuario.setSenha(senha);
+
+                UsuarioConexao objconexao = new UsuarioConexao();
+                ResultSet rsconexao = objconexao.fazerLogin(objUsuario);
+
+                if (rsconexao.next()) {
+
+                    usuarioLogado = nomeUsuario;
+                    MySquad menu = new MySquad();
+                    menu.Principal();
+                    setVisible(false);
+
+                } else {
+
+                    JOptionPane.showMessageDialog(null, "Usuário ou senha incorreta!", "My Squad - Login", 0);
+                    tfUsuario.setText("");
+                    pfSenha.setText("");
+
+                }
+
+            } catch (SQLException erro) {
+                JOptionPane.showMessageDialog(null, "MySquad.Logar: "+ erro, "ERRO!", 0);
+            }
+
+    }
+
     private JComboBox<String> mostrarJogos(){
 
         try {
@@ -753,54 +597,10 @@ public class MySquad extends JFrame{
 
 
         } catch (SQLException erro) {
-            JOptionPane.showMessageDialog(null, "MySquad.mostrarJogos: " + erro, "ERRO!", 0);
+            JOptionPane.showMessageDialog(null, "MySquad.mostraJogos: " + erro, "ERRO!", 0);
         }
 
         return cbjogos;
-
-    }
-
-    private JComboBox<String> mostrarRegiao(){
-
-        try {
-
-            UsuarioConexao objConexao = new UsuarioConexao();
-            
-            ResultSet rs = objConexao.mostraRegiao();
-
-            while(rs.next()) {
-
-                //lista.add(rs.getString(1));
-                cbregiao.addItem(rs.getString(1));
-
-            }
-
-
-        } catch (SQLException erro) {
-            JOptionPane.showMessageDialog(null, "MySquad.mostrarRegiao: " + erro, "ERRO!", 0);
-        }
-
-        return cbregiao;
-
-    }
-
-    private void editarPerfil() throws SQLException {
-
-        String nomeUsuario = nomeField.getText().toString();
-        String nomeRegiao = (String) cbregiao.getSelectedItem();
-        String nomeJogo = (String) cbjogos.getSelectedItem();
-
-        Usuario objUsuarioEdicao = new Usuario();
-        objUsuarioEdicao.setNm_usuario(nomeUsuario);
-        objUsuarioEdicao.setRegiao(nomeRegiao);
-
-        Jogos objJogosEdicao = new Jogos();
-        objJogosEdicao.setNm_jogo(nomeJogo);
-        
-        UsuarioConexao objConexao = new UsuarioConexao();
-        System.out.println(usuarioLogado);
-        objConexao.editaPerfilUsuario(objUsuarioEdicao, usuarioLogado);
-        objConexao.insereJogo(usuarioLogado, objJogosEdicao);
 
     }
 
