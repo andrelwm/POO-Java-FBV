@@ -23,7 +23,7 @@ public class MySquad extends JFrame{
     private DefaultTableModel model;
     private static int usuarioLogado;
 
-
+    //JANELA DE LOGIN
     private void Login(){
 
         //Label e Text Field do usuário
@@ -104,6 +104,7 @@ public class MySquad extends JFrame{
 
     }
 
+    //JANELA DE CADASTRO
     private void Cadastro() {
 
         //Campos do cadastro
@@ -184,6 +185,7 @@ public class MySquad extends JFrame{
 
     }
 
+    //JANELA PRINCIPAL
     private void Principal() {
         setTitle("My Squad");
         setSize(800, 600);
@@ -302,6 +304,7 @@ public class MySquad extends JFrame{
         setVisible(true);
     }
 
+    //JANELA DE PERFIL
     public void profile() {
         setTitle("My Squad - Perfil");
         setSize(800, 600);
@@ -444,14 +447,54 @@ public class MySquad extends JFrame{
 
         buttonPanel.add(editorButton, BorderLayout.CENTER);
 
+        //Painel Central
+        JPanel centralPanel = new JPanel();
+        GridLayout centralLayout = new GridLayout(2, 1);
+        centralPanel.setLayout(centralLayout);
+        centralPanel.setPreferredSize(new Dimension(200, 600));
+
+        //Painel para os nomes
+        JPanel nomePanel = new JPanel();
+        GridLayout nomePanelLayout = new GridLayout(2, 1);
+        nomePanel.setLayout(nomePanelLayout);
+        nomePanel.setPreferredSize(new Dimension(200, 400));
+        nomePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        centralPanel.add(nomePanel, BorderLayout.NORTH);
+
+        //Label do nome
+        JLabel nomeLabel = new JLabel("ANDRÉ LUIZ WANDERLEY DE MELO");
+        nomeLabel.setPreferredSize(new Dimension(200, 60));
+        nomeLabel.setFont(fontePrincipal);
+        nomeLabel.setForeground(Color.BLACK);
+        nomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        nomePanel.add(nomeLabel, BorderLayout.NORTH);
+
+        //Painel do nickname
+        JPanel nickPanel = new JPanel();
+        BorderLayout nickPanelLayout = new BorderLayout();
+        nickPanel.setLayout(nickPanelLayout);
+        nickPanel.setPreferredSize(new Dimension(100, 50));
+        //nickPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 60, 20));
+        nomePanel.add(nickPanel, BorderLayout.NORTH);
+
+        //Label do nickname
+        JLabel nickLabel = new JLabel("ANDREMELO");
+        nickLabel.setPreferredSize(new Dimension(200, 50));
+        nickLabel.setFont(fontePrincipal);
+        nickLabel.setForeground(Color.BLACK);
+        nickLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        nickPanel.add(nickLabel, BorderLayout.NORTH);
+
+
         add(mainPanel, BorderLayout.NORTH);
         add(lateralPanel, BorderLayout.WEST);
+        add(centralPanel, BorderLayout.CENTER);
         setVisible(true);
         setLocationRelativeTo(null);
 
     }
 
-
+    //JANELA DE AMIGOS
     public void friendsPanel() {
 
             setTitle("My Squad - Amigos");
@@ -579,7 +622,7 @@ public class MySquad extends JFrame{
             setLocationRelativeTo(null);
     }
     
-    //PAINEL DE EDIÇÃO DE PERFIL//
+    //JANELA DE EDIÇÃO DE PERFIL//
     public void ProfileEditor() {
 
         // Configurações iniciais da janela
@@ -673,8 +716,10 @@ public class MySquad extends JFrame{
 
         //Painel para organizar os componentes
         JPanel formPanel = new JPanel();
-        formPanel.setLayout(new GridLayout(14, 3));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridLayout formLayout = new GridLayout(14, 3);
+        formLayout.setVgap(5);
+        formPanel.setLayout(formLayout);
+        formPanel.setBorder(BorderFactory.createEmptyBorder(35, 250, 20, 250));
         //formPanel.setBackground(fundoPrincipal);
         profilePanel.add(formPanel, BorderLayout.CENTER);
 
@@ -967,7 +1012,7 @@ public class MySquad extends JFrame{
         objJogosEdicao.setNm_jogo(nomeJogo);
         
         UsuarioConexao objConexao = new UsuarioConexao();
-        System.out.println(usuarioLogado);
+        //System.out.println(usuarioLogado);
         objConexao.editaPerfilUsuario(objUsuarioEdicao, usuarioLogado);
         objConexao.insereJogo(usuarioLogado, objJogosEdicao);
 
