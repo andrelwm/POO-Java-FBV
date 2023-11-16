@@ -22,6 +22,7 @@ public class MySquad extends JFrame{
     private JTable tabelaUsuarios;
     private DefaultTableModel model;
     private static int usuarioLogado;
+    private ArrayList<String> listaDados;
 
     //JANELA DE LOGIN
     private void Login(){
@@ -454,19 +455,28 @@ public class MySquad extends JFrame{
         centralPanel.setPreferredSize(new Dimension(200, 600));
 
         //Painel para os nomes
+        JPanel divisorPanel = new JPanel();
+        GridLayout divisorPanelLayout = new GridLayout(5, 1);
+        divisorPanel.setLayout(divisorPanelLayout);
+        divisorPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 5));
+        centralPanel.add(divisorPanel, BorderLayout.NORTH);
+
+
+        //Painel para os nomes
         JPanel nomePanel = new JPanel();
         GridLayout nomePanelLayout = new GridLayout(2, 1);
         nomePanel.setLayout(nomePanelLayout);
-        nomePanel.setPreferredSize(new Dimension(200, 400));
-        nomePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-        centralPanel.add(nomePanel, BorderLayout.NORTH);
+        nomePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        divisorPanel.add(nomePanel, BorderLayout.NORTH);
 
         //Label do nome
-        JLabel nomeLabel = new JLabel("ANDRÉ LUIZ WANDERLEY DE MELO");
+        String nome = mostrarDados().get(0);
+        JLabel nomeLabel = new JLabel(nome);
         nomeLabel.setPreferredSize(new Dimension(200, 60));
         nomeLabel.setFont(fontePrincipal);
         nomeLabel.setForeground(Color.BLACK);
-        nomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        nomeLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        nomeLabel.setVerticalAlignment(SwingConstants.TOP);
         nomePanel.add(nomeLabel, BorderLayout.NORTH);
 
         //Painel do nickname
@@ -478,12 +488,24 @@ public class MySquad extends JFrame{
         nomePanel.add(nickPanel, BorderLayout.NORTH);
 
         //Label do nickname
-        JLabel nickLabel = new JLabel("ANDREMELO");
+        String nick = mostrarDados().get(1);
+        JLabel nickLabel = new JLabel(nick);
         nickLabel.setPreferredSize(new Dimension(200, 50));
-        nickLabel.setFont(fontePrincipal);
-        nickLabel.setForeground(Color.BLACK);
-        nickLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        nickLabel.setFont(new Font("SansSerif", Font.BOLD + Font.ITALIC, 14));
+        nickLabel.setForeground(Color.LIGHT_GRAY);
+        nickLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        nickLabel.setVerticalAlignment(SwingConstants.TOP);
         nickPanel.add(nickLabel, BorderLayout.NORTH);
+
+        divisorPanel.add(new JLabel());
+        divisorPanel.add(new JLabel());
+
+        JLabel jogosLabel = new JLabel("JOGOS");
+        jogosLabel.setFont(fontePrincipal);
+        jogosLabel.setForeground(Color.BLACK);
+        divisorPanel.add(jogosLabel);
+
+
 
 
         add(mainPanel, BorderLayout.NORTH);
@@ -895,6 +917,7 @@ public class MySquad extends JFrame{
 
                     Usuario objUsuario = new Usuario();
                     objUsuario.setNm_usuario(novoUsuario);
+                    objUsuario.setNome(novoUsuario);
                     objUsuario.setSenha(novaSenha);
                     objUsuario.setEmail(email);
 
@@ -1002,19 +1025,40 @@ public class MySquad extends JFrame{
 
         String nomeUsuario = nomeField.getText().toString();
         String nomeRegiao = (String) cbregiao.getSelectedItem();
-        String nomeJogo = (String) cbjogos.getSelectedItem();
 
         Usuario objUsuarioEdicao = new Usuario();
         objUsuarioEdicao.setNm_usuario(nomeUsuario);
         objUsuarioEdicao.setRegiao(nomeRegiao);
-
-        Jogos objJogosEdicao = new Jogos();
-        objJogosEdicao.setNm_jogo(nomeJogo);
         
         UsuarioConexao objConexao = new UsuarioConexao();
         //System.out.println(usuarioLogado);
         objConexao.editaPerfilUsuario(objUsuarioEdicao, usuarioLogado);
-        objConexao.insereJogo(usuarioLogado, objJogosEdicao);
+
+    }
+
+    private ArrayList<String> mostrarDados(){
+
+        try {
+
+            UsuarioConexao objConexao = new UsuarioConexao();
+            
+            ResultSet rs = objConexao.mostraDados(usuarioLogado);
+
+            while(rs.next()) {
+
+                //lista.add(rs.getString(1));
+                listaDados = new ArrayList<>();
+                listaDados.add(rs.getString(1).toUpperCase());
+                listaDados.add(rs.getString(2));
+
+            }
+
+
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "MySquad.mostrarDados: " + erro, "ERRO!", 0);
+        }
+
+        return listaDados;
 
     }
 
