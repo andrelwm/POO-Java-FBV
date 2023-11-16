@@ -165,6 +165,29 @@ public class UsuarioConexao {
 
     }
 
+    public ResultSet mostraDados(int usuarioLogado) {
+
+        conexao = new Conexao().conectaDB();
+
+        try {
+
+            String query = "select ds_nome, nm_usuario from usuario where cd_usuario = ?";
+
+            pstm = conexao.prepareStatement(query); 
+
+            pstm.setInt(1, usuarioLogado);
+
+            return pstm.executeQuery();
+            
+        } catch (SQLException erro) {
+
+            JOptionPane.showMessageDialog(null, "UsuarioConexao.mostraDados: " + erro, "Erro!", 0);
+            return null;
+        }
+
+
+    }
+
     public ResultSet mostraJogos() {
 
         conexao = new Conexao().conectaDB();
@@ -207,14 +230,16 @@ public class UsuarioConexao {
 
         try {
 
-            String query = "update usuario set ds_nome = ?, ds_regiao = ? where cd_usuario = ?;"
+            String query = "update usuario set ds_nome = ?, ds_regiao = ?, ds_ddd = ?, ds_telefone = ? where cd_usuario = ?;"
             + "commit;";
 
             pstm = conexao.prepareStatement(query); 
 
             pstm.setString(1, objUsuario.getNm_usuario());
             pstm.setString(2, objUsuario.getRegiao());
-            pstm.setInt(3, usuarioLogado);
+            pstm.setString(3, objUsuario.getDdd());
+            pstm.setString(4, objUsuario.getTelefone());
+            pstm.setInt(5, usuarioLogado);
 
             pstm.execute();
             pstm.close();
