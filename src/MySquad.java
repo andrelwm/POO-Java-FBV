@@ -149,6 +149,20 @@ public class MySquad extends JFrame{
             }
         });  
 
+        JButton btnCancela = new JButton("Cancelar");
+        btnCancela.setFont(fontePrincipal);
+        btnCancela.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                MySquad menu = new MySquad();
+                menu.Login();
+                setVisible(false);
+                
+            }
+        });  
+
         //Painel para os campos do cadastro
         JPanel formPainel = new JPanel();
         formPainel.setLayout(new GridLayout(6, 3, 10, 10));
@@ -162,10 +176,11 @@ public class MySquad extends JFrame{
 
         //Painel do botão de conclusão do cadastro
         JPanel painelBotao  = new JPanel();
-        //painelBotao.setLayout(new GridLayout(1, 2, 20, 7));
+        painelBotao.setLayout(new GridLayout(1, 2, 20, 7));
         painelBotao.setPreferredSize(new Dimension(110, 35));
         painelBotao.setOpaque(false);
         painelBotao.add(btnConcluiCadastro);
+        painelBotao.add(btnCancela);
         getRootPane().setDefaultButton(btnConcluiCadastro);
 
         //Painel Principal
@@ -816,10 +831,17 @@ public class MySquad extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 
                 try {
+                    
                     editarPerfil();
-                    System.out.println("Editado com sucesso!");
+                    MySquad menu = new MySquad();
+                    JOptionPane.showMessageDialog(null, "Editado com sucesso!", "MySquad - Cadastro", JOptionPane.INFORMATION_MESSAGE);
+                    menu.Principal();
+                    setVisible(false);
+
                 } catch (SQLException erro) {
+
                 JOptionPane.showMessageDialog(null, "MySquad.profileEditor.salvarButton: " + erro, "ERRO!", 0);
+
                 }
                 
             }
@@ -931,7 +953,7 @@ public class MySquad extends JFrame{
             
         } catch (SQLException erro) {
 
-            JOptionPane.showMessageDialog(null, "MySquad.Logar: "+ erro, "ERRO!", 0);
+            JOptionPane.showMessageDialog(null, "MySquad.Cadastrar: "+ erro, "ERRO!", 0);
 
         }
         return sucesso;
