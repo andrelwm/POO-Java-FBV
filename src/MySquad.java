@@ -1,12 +1,16 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 public class MySquad extends JFrame{
@@ -21,8 +25,11 @@ public class MySquad extends JFrame{
     private JComboBox<String> cbregiao;
     private JTable tabelaUsuarios;
     private DefaultTableModel model;
-    private static int usuarioLogado;
     private ArrayList<String> listaDados;
+    private JLabel arquivoEscolhidoCaminho;
+    private BufferedImage imagem;
+    private static int usuarioLogado;
+    private static String nick, imgUrl;
 
     //JANELA DE LOGIN
     private void Login(){
@@ -433,7 +440,8 @@ public class MySquad extends JFrame{
         fotoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         //Imagem
-        ImageIcon imagem = new ImageIcon(getClass().getResource("/img/user.png"));
+        imgUrl = mostrarDados().get(2);
+        ImageIcon imagem = new ImageIcon(imgUrl);
         fotoLabel.setIcon(imagem);
 
         fotoPanel.add(fotoLabel, BorderLayout.NORTH);
@@ -503,7 +511,6 @@ public class MySquad extends JFrame{
         nomePanel.add(nickPanel, BorderLayout.NORTH);
 
         //Label do nickname
-        String nick = mostrarDados().get(1);
         JLabel nickLabel = new JLabel(nick);
         nickLabel.setPreferredSize(new Dimension(200, 50));
         nickLabel.setFont(new Font("SansSerif", Font.BOLD + Font.ITALIC, 14));
@@ -769,17 +776,26 @@ public class MySquad extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 
-                JFileChooser chooser = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "JPG & GIF Images", "jpg", "gif");
-                chooser.setFileFilter(filter);
-                int returnVal = chooser.showOpenDialog(null);
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
-                System.out.println("You chose to open this file: " +
-                chooser.getSelectedFile().getName());
-        }
+                JFileChooser fc = new JFileChooser();
+                int res = fc.showOpenDialog(null);
 
-            }
+                if (res == JFileChooser.APPROVE_OPTION) {
+                    File arquivo = fc.getSelectedFile();
+                    String caminhoArquivo = arquivo.getAbsolutePath();
+
+                    try {
+
+                        imagem = ManipularImagem.setImagemDimensao(arquivo.getAbsolutePath(), 120, 120);
+                        arquivoEscolhidoCaminho.setText(caminhoArquivo);
+
+                    } catch (Exception ex) {
+                    // System.out.println(ex.printStackTrace().toString());
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Voce nao selecionou nenhum arquivo.");
+                }
+        }
         });
 
         fotoLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -825,6 +841,16 @@ public class MySquad extends JFrame{
         formPanel.add(telefoneLabel);
         formPanel.add(telField);
 
+        JLabel arquivoEscolhidoLabel = new JLabel("Foto escolhida: ");
+        arquivoEscolhidoLabel.setFont(fontePrincipal);
+        arquivoEscolhidoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(arquivoEscolhidoLabel);
+
+        arquivoEscolhidoCaminho = new JLabel();
+        arquivoEscolhidoCaminho.setFont(fontePrincipal);
+        arquivoEscolhidoCaminho.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(arquivoEscolhidoCaminho);
+
         // Botão de salvar
         JButton salvarButton = new JButton("Salvar");
         salvarButton.addActionListener(new ActionListener() {
@@ -833,6 +859,7 @@ public class MySquad extends JFrame{
                 try {
                     
                     editarPerfil();
+                    enviarImagem();
                     MySquad menu = new MySquad();
                     JOptionPane.showMessageDialog(null, "Editado com sucesso!", "MySquad - Cadastro", JOptionPane.INFORMATION_MESSAGE);
                     menu.Principal();
@@ -847,11 +874,35 @@ public class MySquad extends JFrame{
             }
         });
 
+        JButton cancelarButton = new JButton("Cancelar");
+        cancelarButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+                try {
+                    
+                    MySquad menu = new MySquad();
+                    menu.profile();
+                    setVisible(false);
+
+                } catch (Exception erro) {
+
+                JOptionPane.showMessageDialog(null, "MySquad.profileEditor.cancelarButton: " + erro, "ERRO!", 0);
+
+                }
+                
+            }
+        });
+
         //Painel para o botão de salvar
         JPanel buttonPanel = new JPanel();
+        GridLayout buttonLayout = new GridLayout(1, 2, 20, 7);
+        buttonLayout.setHgap(15);
+        buttonPanel.setLayout(buttonLayout);
         buttonPanel.setPreferredSize(new Dimension(100, 35));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 200, 0, 200));
         buttonPanel.setOpaque(false);
         buttonPanel.add(salvarButton);
+        buttonPanel.add(cancelarButton);
         getRootPane().setDefaultButton(salvarButton);
         profilePanel.add(buttonPanel, BorderLayout.SOUTH);
         profilePanel.add(navigationBar, BorderLayout.NORTH);
@@ -885,6 +936,7 @@ public class MySquad extends JFrame{
                 if (rsconexao.next()) {
 
                     usuarioLogado = objconexao.usuarioLogado(objUsuario);
+                    nick = mostrarDados().get(1);
                     MySquad menu = new MySquad();
                     menu.Principal();
                     setVisible(false);
@@ -995,6 +1047,31 @@ public class MySquad extends JFrame{
         
     }
 
+    private void enviarImagem() {
+
+        String nomeImagem = imgUrl;
+
+        if (nomeImagem.matches(".*" + nick + ".*")) {
+
+            File fotoAntiga = new File(nomeImagem);
+            fotoAntiga.delete();
+
+        }
+
+
+        try {
+
+             String caminho = getClass().getResource("../images/").toString().substring(5);
+             File outputfile = new File(caminho + nick + ".jpg");
+             ImageIO.write(imagem, "jpg", outputfile);
+             JOptionPane.showMessageDialog(rootPane, "Imagem enviada com sucesso");
+
+         } catch (IOException erro) {
+            JOptionPane.showMessageDialog(null, "MySquad.enviarImagem: " + erro, "ERRO!", 0);
+         }
+
+    }
+
     private JComboBox<String> mostrarJogos(){
 
         try {
@@ -1073,7 +1150,32 @@ public class MySquad extends JFrame{
                 listaDados.add(rs.getString(1).toUpperCase());
                 listaDados.add(rs.getString(2));
 
+
             }
+
+            try {
+
+                File dir = new File("../images/");
+
+                File[] matches = dir.listFiles(new FilenameFilter() {
+                    
+                    public boolean accept(File dir, String name) {
+                        return name.matches(".*" + nick + ".*");
+                    }
+
+                });
+
+                for (File f : matches) {
+
+                    listaDados.add("../images/" + f);
+
+                }
+
+            } catch (NullPointerException erro) {
+                listaDados.add("../images/user.png");
+                return listaDados;
+            }
+
 
 
         } catch (SQLException erro) {
