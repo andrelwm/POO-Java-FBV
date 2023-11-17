@@ -441,6 +441,7 @@ public class MySquad extends JFrame{
 
         //Imagem
         imgUrl = mostrarDados().get(2);
+        System.out.println(imgUrl);
         ImageIcon imagem = new ImageIcon(imgUrl);
         fotoLabel.setIcon(imagem);
 
@@ -1061,7 +1062,7 @@ public class MySquad extends JFrame{
 
         try {
 
-             String caminho = getClass().getResource("../images/").toString().substring(5);
+             String caminho = getClass().getResource("./images/usuarios/").toString().substring(5);
              File outputfile = new File(caminho + nick + ".jpg");
              ImageIO.write(imagem, "jpg", outputfile);
              JOptionPane.showMessageDialog(rootPane, "Imagem enviada com sucesso");
@@ -1155,7 +1156,7 @@ public class MySquad extends JFrame{
 
             try {
 
-                File dir = new File("../images/");
+                File dir = new File("./images/usuarios/");
 
                 File[] matches = dir.listFiles(new FilenameFilter() {
                     
@@ -1167,12 +1168,12 @@ public class MySquad extends JFrame{
 
                 for (File f : matches) {
 
-                    listaDados.add("../images/" + f);
+                    listaDados.add("./images/usuarios/" + f);
 
                 }
 
             } catch (NullPointerException erro) {
-                listaDados.add("../images/user.png");
+                listaDados.add("./images/user.png");
                 return listaDados;
             }
 
