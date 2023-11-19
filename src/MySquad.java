@@ -5,6 +5,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,7 +33,8 @@ public class MySquad extends JFrame{
     private JLabel arquivoEscolhidoCaminho;
     private BufferedImage imagem;
     private static int usuarioLogado;
-    private static String nick, imgUrl;
+    private static String nick, imgUrl, caminhoArquivo;
+
 
     //JANELA DE LOGIN
     private void Login(){
@@ -440,10 +445,11 @@ public class MySquad extends JFrame{
         fotoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         //Imagem
-        imgUrl = mostrarDados().get(2);
-        System.out.println(imgUrl);
-        ImageIcon imagem = new ImageIcon(imgUrl);
-        fotoLabel.setIcon(imagem);
+        //imgUrl = mostrarDados().get(2);
+        //File url = new File(imgUrl);
+        //BufferedImage imagem = ImageIO.read(url);
+        ImageIcon icone = new ImageIcon(fotoPerfil());
+        fotoLabel.setIcon(icone);
 
         fotoPanel.add(fotoLabel, BorderLayout.NORTH);
 
@@ -782,15 +788,15 @@ public class MySquad extends JFrame{
 
                 if (res == JFileChooser.APPROVE_OPTION) {
                     File arquivo = fc.getSelectedFile();
-                    String caminhoArquivo = arquivo.getAbsolutePath();
+                    caminhoArquivo = arquivo.getAbsolutePath();
+                    
 
                     try {
 
-                        imagem = ManipularImagem.setImagemDimensao(arquivo.getAbsolutePath(), 120, 120);
                         arquivoEscolhidoCaminho.setText(caminhoArquivo);
 
                     } catch (Exception ex) {
-                    // System.out.println(ex.printStackTrace().toString());
+                    JOptionPane.showMessageDialog(null, "Erro!");
                     }
 
                 } else {
@@ -1050,26 +1056,37 @@ public class MySquad extends JFrame{
 
     private void enviarImagem() {
 
-        String nomeImagem = imgUrl;
-
-        if (nomeImagem.matches(".*" + nick + ".*")) {
-
-            File fotoAntiga = new File(nomeImagem);
-            fotoAntiga.delete();
-
-        }
-
-
         try {
+            
 
-             String caminho = getClass().getResource("./images/usuarios/").toString().substring(5);
-             File outputfile = new File(caminho + nick + ".jpg");
-             ImageIO.write(imagem, "jpg", outputfile);
-             JOptionPane.showMessageDialog(rootPane, "Imagem enviada com sucesso");
+            Path inputFile = Paths.get(caminhoArquivo);
+            String caminho = "C:\\Users\\André Melo\\Downloads\\POO-Java-FBV-main\\src\\images\\usuarios\\";
+            Path outputFile = Paths.get(caminho + nick + ".jpg");
+
+            Files.copy(inputFile, outputFile, StandardCopyOption.REPLACE_EXISTING);
 
          } catch (IOException erro) {
             JOptionPane.showMessageDialog(null, "MySquad.enviarImagem: " + erro, "ERRO!", 0);
          }
+
+    }
+
+    private Image fotoPerfil() {
+
+        try {
+
+            String caminho = "C:\\Users\\André Melo\\Downloads\\POO-Java-FBV-main\\src\\images\\usuarios\\" + nick + ".jpg";
+            imgUrl = mostrarDados().get(2);
+            File url = new File(imgUrl);
+            imagem = ImageIO.read(url);
+            imagem = ManipularImagem.setImagemDimensao(caminho, 100, 100);
+
+            return imagem;
+
+        } catch (IOException erro) {
+            JOptionPane.showMessageDialog(null, "MySquad.fotoPerfil: " + erro, "ERRO!", 0);
+            return null;
+        }
 
     }
 
@@ -1144,19 +1161,21 @@ public class MySquad extends JFrame{
             
             ResultSet rs = objConexao.mostraDados(usuarioLogado);
 
+            listaDados = new ArrayList<>();
+
             while(rs.next()) {
 
                 //lista.add(rs.getString(1));
-                listaDados = new ArrayList<>();
                 listaDados.add(rs.getString(1).toUpperCase());
                 listaDados.add(rs.getString(2));
+                listaDados.add("./src/images/user.png");
 
 
             }
 
             try {
 
-                File dir = new File("./images/usuarios/");
+                File dir = new File("./src/images/usuarios/");
 
                 File[] matches = dir.listFiles(new FilenameFilter() {
                     
@@ -1168,12 +1187,12 @@ public class MySquad extends JFrame{
 
                 for (File f : matches) {
 
-                    listaDados.add("./images/usuarios/" + f);
+                    listaDados.remove(listaDados.get(2));
+                    listaDados.add(f.toString());
 
                 }
 
             } catch (NullPointerException erro) {
-                listaDados.add("./images/user.png");
                 return listaDados;
             }
 
