@@ -93,6 +93,7 @@ public class MySquad extends JFrame{
 
         JPanel formPainel = new JPanel();
         formPainel.setLayout(new GridLayout(4, 1, 5, 5));
+        formPainel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 50));
         formPainel.setOpaque(false);
         formPainel.add(lbUsuario);
         formPainel.add(tfUsuario);
@@ -458,7 +459,7 @@ public class MySquad extends JFrame{
         BorderLayout buttonPanelLayout = new BorderLayout();
         buttonPanel.setLayout(buttonPanelLayout);
         buttonPanel.setPreferredSize(new Dimension(100, 50));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 60, 20));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(35, 20, 60, 20));
         fotoPanel.add(buttonPanel, BorderLayout.NORTH);
         //lateralPanel.add(buttonPanel, BorderLayout.NORTH);
 
