@@ -1076,11 +1076,14 @@ public class MySquad extends JFrame{
 
         try {
 
-            String caminho = "C:\\Users\\André Melo\\Downloads\\POO-Java-FBV-main\\src\\images\\usuarios\\" + nick + ".jpg";
+            String caminho = "C:\\Users\\andre.melo\\Downloads\\POO-Java-FBV-main\\src\\images\\usuarios" + nick + ".jpg";
             imgUrl = mostrarDados().get(2);
             File url = new File(imgUrl);
             imagem = ImageIO.read(url);
-            imagem = ManipularImagem.setImagemDimensao(caminho, 100, 100);
+
+            if (imgUrl.matches(".*" + nick + ".*")) {
+                imagem = ManipularImagem.setImagemDimensao(caminho, 100, 100);
+            }             
 
             return imagem;
 
