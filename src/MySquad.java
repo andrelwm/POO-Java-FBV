@@ -11,9 +11,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class MySquad extends JFrame{
 
-    //testee
-    //fdfdfddsadsadsadsadsadsadsadsadasdsad
-    //dasdas
+    
 
     final private Font fontePrincipal = new Font("Arial", Font.BOLD, 18);
     final private Color textoPrincipal = new Color(255, 255, 255);
