@@ -171,7 +171,7 @@ public class UsuarioConexao {
 
         try {
 
-            String query = "select ds_nome, nm_usuario from usuario where cd_usuario = ?";
+            String query = "select ds_nome, nm_usuario, ds_ddd, ds_telefone, ds_regiao from usuario where cd_usuario = ?";
 
             pstm = conexao.prepareStatement(query); 
 
