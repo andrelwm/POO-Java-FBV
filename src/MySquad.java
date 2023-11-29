@@ -791,7 +791,6 @@ public class MySquad extends JFrame{
                     File arquivo = fc.getSelectedFile();
                     caminhoArquivo = arquivo.getAbsolutePath();
                     
-
                     try {
 
                         arquivoEscolhidoCaminho.setText(caminhoArquivo);
@@ -1059,15 +1058,16 @@ public class MySquad extends JFrame{
 
         try {
             
-
             Path inputFile = Paths.get(caminhoArquivo);
-            String caminho = "C:\\Users\\André Melo\\Downloads\\POO-Java-FBV-main\\src\\images\\usuarios\\";
+            String caminho = "C:\\Users\\andre.melo\\Downloads\\POO-Java-FBV-main\\src\\images\\usuarios\\";
             Path outputFile = Paths.get(caminho + nick + ".jpg");
 
             Files.copy(inputFile, outputFile, StandardCopyOption.REPLACE_EXISTING);
 
          } catch (IOException erro) {
             JOptionPane.showMessageDialog(null, "MySquad.enviarImagem: " + erro, "ERRO!", 0);
+         } catch (NullPointerException erro) {
+            caminhoArquivo = "C:\\Users\\andre.melo\\Downloads\\POO-Java-FBV-main\\src\\images\\usuarios\\" + nick + ".jpg";
          }
 
     }
@@ -1076,8 +1076,8 @@ public class MySquad extends JFrame{
 
         try {
 
-            String caminho = "C:\\Users\\andre.melo\\Downloads\\POO-Java-FBV-main\\src\\images\\usuarios" + nick + ".jpg";
-            imgUrl = mostrarDados().get(2);
+            String caminho = "C:\\Users\\andre.melo\\Downloads\\POO-Java-FBV-main\\src\\images\\usuarios\\" + nick + ".jpg";
+            imgUrl = mostrarDados().get(5);
             File url = new File(imgUrl);
             imagem = ImageIO.read(url);
 
@@ -1143,13 +1143,32 @@ public class MySquad extends JFrame{
     }
 
     private void editarPerfil() throws SQLException {
-
+        
+        ArrayList<String> dadosAntigos = mostrarDados();
         String nomeUsuario = nomeField.getText().toString();
+        if (nomeUsuario.isEmpty()) {
+            nomeUsuario = dadosAntigos.get(0);
+        }
         String nomeRegiao = (String) cbregiao.getSelectedItem();
-
+        if (nomeRegiao.matches(".*região.*")) {
+            nomeRegiao = dadosAntigos.get(4);
+            if(nomeRegiao.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Favor informar uma região", "My Squad - Editar Perfil", 0);
+            }
+        }
+        String ddd = DDDField.getText().toString();
+        if (ddd.isEmpty()) {
+            ddd = dadosAntigos.get(2);
+        }
+        String telefone = telField.getText().toString();
+        if (telefone.isEmpty()) {
+            telefone = dadosAntigos.get(3);
+        }
         Usuario objUsuarioEdicao = new Usuario();
         objUsuarioEdicao.setNm_usuario(nomeUsuario);
         objUsuarioEdicao.setRegiao(nomeRegiao);
+        objUsuarioEdicao.setDdd(ddd);
+        objUsuarioEdicao.setTelefone(telefone);
         
         UsuarioConexao objConexao = new UsuarioConexao();
         //System.out.println(usuarioLogado);
@@ -1169,11 +1188,12 @@ public class MySquad extends JFrame{
 
             while(rs.next()) {
 
-                //lista.add(rs.getString(1));
                 listaDados.add(rs.getString(1).toUpperCase());
                 listaDados.add(rs.getString(2));
+                listaDados.add(rs.getString(3));
+                listaDados.add(rs.getString(4));
+                listaDados.add(rs.getString(5));
                 listaDados.add("./src/images/user.png");
-
 
             }
 
@@ -1191,7 +1211,7 @@ public class MySquad extends JFrame{
 
                 for (File f : matches) {
 
-                    listaDados.remove(listaDados.get(2));
+                    listaDados.remove(listaDados.get(5));
                     listaDados.add(f.toString());
 
                 }
@@ -1215,5 +1235,4 @@ public class MySquad extends JFrame{
         MySquad menuLogin = new MySquad();
         menuLogin.Login();
         }
-
 }
