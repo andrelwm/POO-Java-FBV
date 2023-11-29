@@ -2,7 +2,7 @@
 public class Usuario {
 
     private int cod_usuario;
-    private String  nm_usuario, email, senha, nome, regiao, telefone;
+    private String  nm_usuario, email, senha, nome, regiao, ddd, telefone;
     
     public String getNm_usuario() {
         return nm_usuario;
@@ -39,6 +39,12 @@ public class Usuario {
     }
     public void setRegiao(String regiao) {
         this.regiao = regiao;
+    }
+    public String getDdd() {
+        return ddd;
+    }
+    public void setDdd(String ddd) {
+        this.ddd = ddd;
     }
     public String getTelefone() {
         return telefone;

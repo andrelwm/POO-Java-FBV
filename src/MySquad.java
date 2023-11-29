@@ -1,12 +1,20 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 public class MySquad extends JFrame{
@@ -16,15 +24,20 @@ public class MySquad extends JFrame{
     final private Font fontePrincipal = new Font("Arial", Font.BOLD, 18);
     final private Color textoPrincipal = new Color(255, 255, 255);
     final private Color fundoPrincipal = new Color(25, 25, 112);
-    private JTextField tfUsuario, tfEmail, pfSenha, pesquisaField, tfNovoUsuario, pfNovaSenha, nomeField;
+    private JTextField tfUsuario, tfEmail, pfSenha, pesquisaField, tfNovoUsuario, pfNovaSenha, nomeField, DDDField, telField;
     private JList<String> amigosList, rankingList;
     private JComboBox<String> cbjogos;
     private JComboBox<String> cbregiao;
     private JTable tabelaUsuarios;
     private DefaultTableModel model;
+    private ArrayList<String> listaDados;
+    private JLabel arquivoEscolhidoCaminho;
+    private BufferedImage imagem;
     private static int usuarioLogado;
+    private static String nick, imgUrl, caminhoArquivo;
 
 
+    //JANELA DE LOGIN
     private void Login(){
 
         //Label e Text Field do usuário
@@ -81,6 +94,7 @@ public class MySquad extends JFrame{
 
         JPanel formPainel = new JPanel();
         formPainel.setLayout(new GridLayout(4, 1, 5, 5));
+        formPainel.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 50));
         formPainel.setOpaque(false);
         formPainel.add(lbUsuario);
         formPainel.add(tfUsuario);
@@ -105,6 +119,7 @@ public class MySquad extends JFrame{
 
     }
 
+    //JANELA DE CADASTRO
     private void Cadastro() {
 
         //Campos do cadastro
@@ -148,6 +163,20 @@ public class MySquad extends JFrame{
             }
         });  
 
+        JButton btnCancela = new JButton("Cancelar");
+        btnCancela.setFont(fontePrincipal);
+        btnCancela.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                MySquad menu = new MySquad();
+                menu.Login();
+                setVisible(false);
+                
+            }
+        });  
+
         //Painel para os campos do cadastro
         JPanel formPainel = new JPanel();
         formPainel.setLayout(new GridLayout(6, 3, 10, 10));
@@ -161,10 +190,11 @@ public class MySquad extends JFrame{
 
         //Painel do botão de conclusão do cadastro
         JPanel painelBotao  = new JPanel();
-        //painelBotao.setLayout(new GridLayout(1, 2, 20, 7));
+        painelBotao.setLayout(new GridLayout(1, 2, 20, 7));
         painelBotao.setPreferredSize(new Dimension(110, 35));
         painelBotao.setOpaque(false);
         painelBotao.add(btnConcluiCadastro);
+        painelBotao.add(btnCancela);
         getRootPane().setDefaultButton(btnConcluiCadastro);
 
         //Painel Principal
@@ -185,6 +215,7 @@ public class MySquad extends JFrame{
 
     }
 
+    //JANELA PRINCIPAL
     private void Principal() {
         setTitle("My Squad");
         setSize(800, 600);
@@ -212,13 +243,25 @@ public class MySquad extends JFrame{
         navigationMenu.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
         navigationMenu.setBackground(fundoPrincipal);
         JButton homeButton = new JButton("Início");
+        homeButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                        MySquad menu = new MySquad();
+                        menu.Principal();
+                        setVisible(false);
+
+                }
+            });
+
         JButton gamesButton = new JButton("Jogos");
+
+        
         JButton profileButton = new JButton("Perfil");
         profileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
                     MySquad menu = new MySquad();
-                    menu.ProfileEditor();
+                    menu.profile();
                     setVisible(false);
 
             }
@@ -291,7 +334,220 @@ public class MySquad extends JFrame{
         setVisible(true);
     }
 
+    //JANELA DE PERFIL
+    public void profile() {
+        setTitle("My Squad - Perfil");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
+        // Painel principal
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+
+        //Barra de Navegação
+        JPanel navigationBar = new JPanel();
+        GridLayout navigationbarlayout = new GridLayout(1, 6);
+        navigationbarlayout.setHgap(20);
+        navigationBar.setLayout(navigationbarlayout);
+        navigationBar.setPreferredSize(new Dimension(800, 50));
+        navigationBar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        navigationBar.setBackground(fundoPrincipal);
+
+        // Menu de navegação
+        JPanel navigationMenu = new JPanel();
+        GridLayout navigationlayout = new GridLayout(1, 4);
+        navigationlayout.setHgap(5);
+        navigationMenu.setLayout(navigationlayout);
+        navigationMenu.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+        navigationMenu.setBackground(fundoPrincipal);
+        JButton homeButton = new JButton("Início");
+        homeButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                        MySquad menu = new MySquad();
+                        menu.Principal();
+                        setVisible(false);
+
+                }
+            });
+
+        JButton gamesButton = new JButton("Jogos");
+
+        
+        JButton profileButton = new JButton("Perfil");
+        profileButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                    MySquad menu = new MySquad();
+                    menu.profile();
+                    setVisible(false);
+
+            }
+        });
+        JButton friendsButton = new JButton("Amigos");
+        friendsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                    MySquad menu = new MySquad();
+                    menu.friendsPanel();
+                    setVisible(false);
+
+            }
+        });
+        navigationMenu.add(homeButton);
+        navigationMenu.add(profileButton);
+        navigationMenu.add(gamesButton);
+        navigationMenu.add(friendsButton);
+        navigationBar.add(navigationMenu, BorderLayout.WEST);
+
+        //Barra de Pesquisa
+        JPanel navigationPesquisa = new JPanel();
+        GridLayout pesquisalayout = new GridLayout(1, 3);
+        pesquisalayout.setHgap(5);
+        navigationPesquisa.setLayout(pesquisalayout);
+        navigationPesquisa.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 5));
+        navigationPesquisa.setBackground(fundoPrincipal);
+        navigationBar.add(navigationPesquisa, BorderLayout.EAST);
+        pesquisaField = new JTextField(20);
+        JButton pesquisaButton = new JButton("Pesquisar");
+        pesquisaButton.setPreferredSize(new Dimension(50, 30));
+        pesquisaButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                realizarPesquisa();
+                
+            }
+        });
+        navigationPesquisa.add(pesquisaField);
+        navigationPesquisa.add(pesquisaButton);
+
+        mainPanel.add(navigationBar, BorderLayout.NORTH);
+
+        //Painel Lateral
+        JPanel lateralPanel = new JPanel();
+        GridLayout lateralLayout = new GridLayout(2, 1);
+        lateralPanel.setLayout(lateralLayout);
+        lateralPanel.setPreferredSize(new Dimension(200, 600));
+        lateralLayout.setVgap(15);
+
+        //Painel para a foto
+        JPanel fotoPanel = new JPanel();
+        GridLayout fotoPanelLayout = new GridLayout(2, 1);
+        fotoPanel.setLayout(fotoPanelLayout);
+        fotoPanel.setPreferredSize(new Dimension(200, 400));
+        fotoPanel.setBorder(BorderFactory.createEmptyBorder(5, 20, 0, 20));
+        lateralPanel.add(fotoPanel, BorderLayout.NORTH);
+
+        //Label da foto
+        JLabel fotoLabel = new JLabel();
+        fotoLabel.setPreferredSize(new Dimension(200, 300));
+        fotoLabel.setFont(fontePrincipal);
+        fotoLabel.setForeground(Color.WHITE);
+        fotoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        //Imagem
+        //imgUrl = mostrarDados().get(2);
+        //File url = new File(imgUrl);
+        //BufferedImage imagem = ImageIO.read(url);
+        ImageIcon icone = new ImageIcon(fotoPerfil());
+        fotoLabel.setIcon(icone);
+
+        fotoPanel.add(fotoLabel, BorderLayout.NORTH);
+
+        //Painel do botão
+        JPanel buttonPanel = new JPanel();
+        BorderLayout buttonPanelLayout = new BorderLayout();
+        buttonPanel.setLayout(buttonPanelLayout);
+        buttonPanel.setPreferredSize(new Dimension(100, 50));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(35, 20, 60, 20));
+        fotoPanel.add(buttonPanel, BorderLayout.NORTH);
+        //lateralPanel.add(buttonPanel, BorderLayout.NORTH);
+
+        //Botão de edição
+        JButton editorButton = new JButton("Editar Perfil");
+        editorButton.setBounds(10, 10, 100, 50);
+        editorButton.setPreferredSize(new Dimension(100, 50));
+        editorButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                MySquad menu = new MySquad();
+                menu.ProfileEditor();
+                setVisible(false);
+                
+            }
+        });
+
+        buttonPanel.add(editorButton, BorderLayout.CENTER);
+
+        //Painel Central
+        JPanel centralPanel = new JPanel();
+        GridLayout centralLayout = new GridLayout(2, 1);
+        centralPanel.setLayout(centralLayout);
+        centralPanel.setPreferredSize(new Dimension(200, 600));
+
+        //Painel para os nomes
+        JPanel divisorPanel = new JPanel();
+        GridLayout divisorPanelLayout = new GridLayout(5, 1);
+        divisorPanel.setLayout(divisorPanelLayout);
+        divisorPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 5));
+        centralPanel.add(divisorPanel, BorderLayout.NORTH);
+
+
+        //Painel para os nomes
+        JPanel nomePanel = new JPanel();
+        GridLayout nomePanelLayout = new GridLayout(2, 1);
+        nomePanel.setLayout(nomePanelLayout);
+        nomePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        divisorPanel.add(nomePanel, BorderLayout.NORTH);
+
+        //Label do nome
+        String nome = mostrarDados().get(0);
+        JLabel nomeLabel = new JLabel(nome);
+        nomeLabel.setPreferredSize(new Dimension(200, 60));
+        nomeLabel.setFont(fontePrincipal);
+        nomeLabel.setForeground(Color.BLACK);
+        nomeLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        nomeLabel.setVerticalAlignment(SwingConstants.TOP);
+        nomePanel.add(nomeLabel, BorderLayout.NORTH);
+
+        //Painel do nickname
+        JPanel nickPanel = new JPanel();
+        BorderLayout nickPanelLayout = new BorderLayout();
+        nickPanel.setLayout(nickPanelLayout);
+        nickPanel.setPreferredSize(new Dimension(100, 50));
+        //nickPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 60, 20));
+        nomePanel.add(nickPanel, BorderLayout.NORTH);
+
+        //Label do nickname
+        JLabel nickLabel = new JLabel(nick);
+        nickLabel.setPreferredSize(new Dimension(200, 50));
+        nickLabel.setFont(new Font("SansSerif", Font.BOLD + Font.ITALIC, 14));
+        nickLabel.setForeground(Color.LIGHT_GRAY);
+        nickLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        nickLabel.setVerticalAlignment(SwingConstants.TOP);
+        nickPanel.add(nickLabel, BorderLayout.NORTH);
+
+        divisorPanel.add(new JLabel());
+        divisorPanel.add(new JLabel());
+
+        JLabel jogosLabel = new JLabel("JOGOS");
+        jogosLabel.setFont(fontePrincipal);
+        jogosLabel.setForeground(Color.BLACK);
+        divisorPanel.add(jogosLabel);
+
+
+
+
+        add(mainPanel, BorderLayout.NORTH);
+        add(lateralPanel, BorderLayout.WEST);
+        add(centralPanel, BorderLayout.CENTER);
+        setVisible(true);
+        setLocationRelativeTo(null);
+
+    }
+
+    //JANELA DE AMIGOS
     public void friendsPanel() {
 
             setTitle("My Squad - Amigos");
@@ -332,7 +588,7 @@ public class MySquad extends JFrame{
                 public void actionPerformed(ActionEvent e) {
 
                         MySquad menu = new MySquad();
-                        menu.ProfileEditor();
+                        menu.profile();
                         setVisible(false);
 
                 }
@@ -419,7 +675,7 @@ public class MySquad extends JFrame{
             setLocationRelativeTo(null);
     }
     
-    //PAINEL DE EDIÇÃO DE PERFIL//
+    //JANELA DE EDIÇÃO DE PERFIL//
     public void ProfileEditor() {
 
         // Configurações iniciais da janela
@@ -461,7 +717,7 @@ public class MySquad extends JFrame{
             public void actionPerformed(ActionEvent e) {
 
                     MySquad menu = new MySquad();
-                    menu.ProfileEditor();
+                    menu.profile();
                     setVisible(false);
 
             }
@@ -513,8 +769,10 @@ public class MySquad extends JFrame{
 
         //Painel para organizar os componentes
         JPanel formPanel = new JPanel();
-        formPanel.setLayout(new GridLayout(14, 3));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridLayout formLayout = new GridLayout(14, 3);
+        formLayout.setVgap(5);
+        formPanel.setLayout(formLayout);
+        formPanel.setBorder(BorderFactory.createEmptyBorder(35, 250, 20, 250));
         //formPanel.setBackground(fundoPrincipal);
         profilePanel.add(formPanel, BorderLayout.CENTER);
 
@@ -527,17 +785,25 @@ public class MySquad extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 
-                JFileChooser chooser = new JFileChooser();
-                FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "JPG & GIF Images", "jpg", "gif");
-                chooser.setFileFilter(filter);
-                int returnVal = chooser.showOpenDialog(null);
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
-                System.out.println("You chose to open this file: " +
-                chooser.getSelectedFile().getName());
-        }
+                JFileChooser fc = new JFileChooser();
+                int res = fc.showOpenDialog(null);
 
-            }
+                if (res == JFileChooser.APPROVE_OPTION) {
+                    File arquivo = fc.getSelectedFile();
+                    caminhoArquivo = arquivo.getAbsolutePath();
+                    
+                    try {
+
+                        arquivoEscolhidoCaminho.setText(caminhoArquivo);
+
+                    } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Erro!");
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Voce nao selecionou nenhum arquivo.");
+                }
+        }
         });
 
         fotoLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -545,7 +811,7 @@ public class MySquad extends JFrame{
         formPanel.add(adicionarFotoButton);
 
         // Campo para editar o nickname
-        JLabel nomeLabel = new JLabel("Nome: ");
+        JLabel nomeLabel = new JLabel("Nome de Exibição: ");
         nomeLabel.setFont(fontePrincipal);
         //nickLabel.setForeground(textoPrincipal);
         nomeField = new JTextField(20);
@@ -564,16 +830,34 @@ public class MySquad extends JFrame{
         formPanel.add(regiaoLabel);
         formPanel.add(cbregiao);
 
-        // Campo para selecionar jogos favoritos
-        JLabel jogosLabel = new JLabel("Jogos Favoritos: ");
-        jogosLabel.setFont(fontePrincipal);
-        //jogosLabel.setForeground(textoPrincipal);
-        cbjogos = new JComboBox<String>();
-        cbjogos.addItem("Selecione um jogo");
-        cbjogos = mostrarJogos();
-        jogosLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        formPanel.add(jogosLabel);
-        formPanel.add(cbjogos);
+        //Label para o telefone
+
+
+        // Campo para adicionar DDD
+        JLabel DDDLabel = new JLabel("DDD: ");
+        DDDLabel.setFont(fontePrincipal);
+        DDDField = new JTextField(10);
+        DDDLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(DDDLabel);
+        formPanel.add(DDDField);
+        
+
+        JLabel telefoneLabel = new JLabel("Telefone: ");
+        telefoneLabel.setFont(fontePrincipal);
+        telField = new JTextField(30);
+        telefoneLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(telefoneLabel);
+        formPanel.add(telField);
+
+        JLabel arquivoEscolhidoLabel = new JLabel("Foto escolhida: ");
+        arquivoEscolhidoLabel.setFont(fontePrincipal);
+        arquivoEscolhidoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(arquivoEscolhidoLabel);
+
+        arquivoEscolhidoCaminho = new JLabel();
+        arquivoEscolhidoCaminho.setFont(fontePrincipal);
+        arquivoEscolhidoCaminho.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(arquivoEscolhidoCaminho);
 
         // Botão de salvar
         JButton salvarButton = new JButton("Salvar");
@@ -581,10 +865,37 @@ public class MySquad extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 
                 try {
+                    
                     editarPerfil();
-                    System.out.println("Editado com sucesso!");
+                    enviarImagem();
+                    MySquad menu = new MySquad();
+                    JOptionPane.showMessageDialog(null, "Editado com sucesso!", "MySquad - Cadastro", JOptionPane.INFORMATION_MESSAGE);
+                    menu.Principal();
+                    setVisible(false);
+
                 } catch (SQLException erro) {
+
                 JOptionPane.showMessageDialog(null, "MySquad.profileEditor.salvarButton: " + erro, "ERRO!", 0);
+
+                }
+                
+            }
+        });
+
+        JButton cancelarButton = new JButton("Cancelar");
+        cancelarButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+                try {
+                    
+                    MySquad menu = new MySquad();
+                    menu.profile();
+                    setVisible(false);
+
+                } catch (Exception erro) {
+
+                JOptionPane.showMessageDialog(null, "MySquad.profileEditor.cancelarButton: " + erro, "ERRO!", 0);
+
                 }
                 
             }
@@ -592,9 +903,14 @@ public class MySquad extends JFrame{
 
         //Painel para o botão de salvar
         JPanel buttonPanel = new JPanel();
+        GridLayout buttonLayout = new GridLayout(1, 2, 20, 7);
+        buttonLayout.setHgap(15);
+        buttonPanel.setLayout(buttonLayout);
         buttonPanel.setPreferredSize(new Dimension(100, 35));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 200, 0, 200));
         buttonPanel.setOpaque(false);
         buttonPanel.add(salvarButton);
+        buttonPanel.add(cancelarButton);
         getRootPane().setDefaultButton(salvarButton);
         profilePanel.add(buttonPanel, BorderLayout.SOUTH);
         profilePanel.add(navigationBar, BorderLayout.NORTH);
@@ -628,6 +944,7 @@ public class MySquad extends JFrame{
                 if (rsconexao.next()) {
 
                     usuarioLogado = objconexao.usuarioLogado(objUsuario);
+                    nick = mostrarDados().get(1);
                     MySquad menu = new MySquad();
                     menu.Principal();
                     setVisible(false);
@@ -682,6 +999,7 @@ public class MySquad extends JFrame{
 
                     Usuario objUsuario = new Usuario();
                     objUsuario.setNm_usuario(novoUsuario);
+                    objUsuario.setNome(novoUsuario);
                     objUsuario.setSenha(novaSenha);
                     objUsuario.setEmail(email);
 
@@ -695,7 +1013,7 @@ public class MySquad extends JFrame{
             
         } catch (SQLException erro) {
 
-            JOptionPane.showMessageDialog(null, "MySquad.Logar: "+ erro, "ERRO!", 0);
+            JOptionPane.showMessageDialog(null, "MySquad.Cadastrar: "+ erro, "ERRO!", 0);
 
         }
         return sucesso;
@@ -735,6 +1053,46 @@ public class MySquad extends JFrame{
             
         }
         
+    }
+
+    private void enviarImagem() {
+
+        try {
+            
+            Path inputFile = Paths.get(caminhoArquivo);
+            String caminho = "C:\\Users\\andre.melo\\Downloads\\POO-Java-FBV-main\\src\\images\\usuarios\\";
+            Path outputFile = Paths.get(caminho + nick + ".jpg");
+
+            Files.copy(inputFile, outputFile, StandardCopyOption.REPLACE_EXISTING);
+
+         } catch (IOException erro) {
+            JOptionPane.showMessageDialog(null, "MySquad.enviarImagem: " + erro, "ERRO!", 0);
+         } catch (NullPointerException erro) {
+            caminhoArquivo = "C:\\Users\\andre.melo\\Downloads\\POO-Java-FBV-main\\src\\images\\usuarios\\" + nick + ".jpg";
+         }
+
+    }
+
+    private Image fotoPerfil() {
+
+        try {
+
+            String caminho = "C:\\Users\\andre.melo\\Downloads\\POO-Java-FBV-main\\src\\images\\usuarios\\" + nick + ".jpg";
+            imgUrl = mostrarDados().get(5);
+            File url = new File(imgUrl);
+            imagem = ImageIO.read(url);
+
+            if (imgUrl.matches(".*" + nick + ".*")) {
+                imagem = ManipularImagem.setImagemDimensao(caminho, 100, 100);
+            }             
+
+            return imagem;
+
+        } catch (IOException erro) {
+            JOptionPane.showMessageDialog(null, "MySquad.fotoPerfil: " + erro, "ERRO!", 0);
+            return null;
+        }
+
     }
 
     private JComboBox<String> mostrarJogos(){
@@ -786,22 +1144,90 @@ public class MySquad extends JFrame{
     }
 
     private void editarPerfil() throws SQLException {
-
+        
+        ArrayList<String> dadosAntigos = mostrarDados();
         String nomeUsuario = nomeField.getText().toString();
+        if (nomeUsuario.isEmpty()) {
+            nomeUsuario = dadosAntigos.get(0);
+        }
         String nomeRegiao = (String) cbregiao.getSelectedItem();
-        String nomeJogo = (String) cbjogos.getSelectedItem();
-
+        if (nomeRegiao.matches(".*região.*")) {
+            nomeRegiao = dadosAntigos.get(4);
+            if(nomeRegiao.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Favor informar uma região", "My Squad - Editar Perfil", 0);
+            }
+        }
+        String ddd = DDDField.getText().toString();
+        if (ddd.isEmpty()) {
+            ddd = dadosAntigos.get(2);
+        }
+        String telefone = telField.getText().toString();
+        if (telefone.isEmpty()) {
+            telefone = dadosAntigos.get(3);
+        }
         Usuario objUsuarioEdicao = new Usuario();
         objUsuarioEdicao.setNm_usuario(nomeUsuario);
         objUsuarioEdicao.setRegiao(nomeRegiao);
-
-        Jogos objJogosEdicao = new Jogos();
-        objJogosEdicao.setNm_jogo(nomeJogo);
+        objUsuarioEdicao.setDdd(ddd);
+        objUsuarioEdicao.setTelefone(telefone);
         
         UsuarioConexao objConexao = new UsuarioConexao();
-        System.out.println(usuarioLogado);
+        //System.out.println(usuarioLogado);
         objConexao.editaPerfilUsuario(objUsuarioEdicao, usuarioLogado);
-        objConexao.insereJogo(usuarioLogado, objJogosEdicao);
+
+    }
+
+    private ArrayList<String> mostrarDados(){
+
+        try {
+
+            UsuarioConexao objConexao = new UsuarioConexao();
+            
+            ResultSet rs = objConexao.mostraDados(usuarioLogado);
+
+            listaDados = new ArrayList<>();
+
+            while(rs.next()) {
+
+                listaDados.add(rs.getString(1).toUpperCase());
+                listaDados.add(rs.getString(2));
+                listaDados.add(rs.getString(3));
+                listaDados.add(rs.getString(4));
+                listaDados.add(rs.getString(5));
+                listaDados.add("./src/images/user.png");
+
+            }
+
+            try {
+
+                File dir = new File("./src/images/usuarios/");
+
+                File[] matches = dir.listFiles(new FilenameFilter() {
+                    
+                    public boolean accept(File dir, String name) {
+                        return name.matches(".*" + nick + ".*");
+                    }
+
+                });
+
+                for (File f : matches) {
+
+                    listaDados.remove(listaDados.get(5));
+                    listaDados.add(f.toString());
+
+                }
+
+            } catch (NullPointerException erro) {
+                return listaDados;
+            }
+
+
+
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "MySquad.mostrarDados: " + erro, "ERRO!", 0);
+        }
+
+        return listaDados;
 
     }
 
@@ -810,5 +1236,4 @@ public class MySquad extends JFrame{
         MySquad menuLogin = new MySquad();
         menuLogin.Login();
         }
-
 }
